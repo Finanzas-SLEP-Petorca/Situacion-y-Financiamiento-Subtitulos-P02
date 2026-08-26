@@ -220,29 +220,51 @@ export function PrintViewEstructura({ estructura, estructuraCalc }) {
       {(() => {
         const detailRows = buildEstructuraDetailRows(estructura);
         if (!detailRows.length) return null;
+        const groups = [];
+        const indexBySubvencion = {};
+        detailRows.forEach((e) => {
+          if (!(e.subvencion in indexBySubvencion)) {
+            indexBySubvencion[e.subvencion] = groups.length;
+            groups.push({ subvencion: e.subvencion, rows: [] });
+          }
+          groups[indexBySubvencion[e.subvencion]].rows.push(e);
+        });
         return (
           <>
             <h2 style={{ fontSize: 13, fontWeight: 700, margin: "16px 0 6px" }}>Detalle de Ingresos y Gastos por subvención</h2>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 10 }}>
-              <thead>
-                <tr>
-                  {["Subvención", "Tipo", "Fecha", "Concepto", "Monto"].map((h) => (
-                    <th key={h} style={{ ...printHeadStyle, textAlign: h === "Monto" ? "right" : "left" }}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {detailRows.map((e, i) => (
-                  <tr key={i}>
-                    <td style={printCellStyle}>{e.subvencion}</td>
-                    <td style={printCellStyle}>{e.tipo}</td>
-                    <td style={printCellStyle}>{e.fecha || ""}</td>
-                    <td style={printCellStyle}>{e.concepto || ""}</td>
-                    <td style={printCellStyleR}>{fmtCLP(e.monto)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            {groups.map((grp) => {
+              const subtotal = grp.rows.reduce((s, e) => s + (e.monto || 0), 0);
+              return (
+                <div key={grp.subvencion} style={{ marginBottom: 10, breakInside: "avoid" }}>
+                  <h3 style={{ fontSize: 11, fontWeight: 700, margin: "6px 0 3px", color: "#014F86" }}>{grp.subvencion}</h3>
+                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 10 }}>
+                    <thead>
+                      <tr>
+                        {["Tipo", "Fecha", "Concepto", "Monto"].map((h) => (
+                          <th key={h} style={{ ...printHeadStyle, textAlign: h === "Monto" ? "right" : "left" }}>{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {grp.rows.map((e, i) => (
+                        <tr key={i}>
+                          <td style={printCellStyle}>{e.tipo}</td>
+                          <td style={printCellStyle}>{e.fecha || ""}</td>
+                          <td style={printCellStyle}>{e.concepto || ""}</td>
+                          <td style={printCellStyleR}>{fmtCLP(e.monto)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                    <tfoot>
+                      <tr style={{ fontWeight: 700 }}>
+                        <td style={printCellStyle} colSpan={3}>Subtotal {grp.subvencion}</td>
+                        <td style={printCellStyleR}>{fmtCLP(subtotal)}</td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              );
+            })}
           </>
         );
       })()}

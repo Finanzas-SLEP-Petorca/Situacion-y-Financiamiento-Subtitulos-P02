@@ -145,33 +145,37 @@ function sortByFecha(rows) {
 }
 
 /* Desglose de detalle (fecha/concepto/monto) de Ingresos y Gastos de Estructura Déficit,
-   en el mismo orden de subvenciones (GRUPO_ORDER) que el resto de la pestaña, y cada
-   bloque ordenado cronológicamente. Usado por el Excel y el PDF de Traspasos entre Cuentas. */
+   agrupado por subvención (una sola entrada por subvención — Carrera Docente y las
+   sub-cuentas de JUNJI quedan como "tipo" dentro de esa misma subvención, no como
+   entidades aparte), en el mismo orden que el resto de la pestaña (GRUPO_ORDER, JUNJI,
+   Aporte Fiscal) y cada bloque ordenado cronológicamente. Usado por el Excel y el PDF
+   de Traspasos entre Cuentas. */
 export function buildEstructuraDetailRows(estructura) {
   const rows = [];
+  const addGroup = (subvencion, g) => {
+    rows.push(...sortByFecha((g.ingresosDetalle || []).map((e) => ({ subvencion, tipo: "Ingresos", ...e }))));
+    rows.push(...sortByFecha((g.gastoRemuDetalle || []).map((e) => ({ subvencion, tipo: "Gasto Remuneraciones", ...e }))));
+    rows.push(...sortByFecha((g.gastoST2229Detalle || []).map((e) => ({ subvencion, tipo: "Gasto Subt. 22 y 29", ...e }))));
+    if (g.cd) {
+      rows.push(...sortByFecha((g.cdIngresosDetalle || []).map((e) => ({ subvencion, tipo: "Carrera Docente — Ingresos", ...e }))));
+      rows.push(...sortByFecha((g.cdGastoDetalle || []).map((e) => ({ subvencion, tipo: "Carrera Docente — Gasto", ...e }))));
+    }
+  };
+
   GRUPO_ORDER.forEach((key) => {
     const g = estructura.grupos[key];
-    if (!g) return;
-    rows.push(...sortByFecha((g.ingresosDetalle || []).map((e) => ({ subvencion: g.label, tipo: "Ingresos", ...e }))));
-    rows.push(...sortByFecha((g.gastoRemuDetalle || []).map((e) => ({ subvencion: g.label, tipo: "Gasto Remuneraciones", ...e }))));
-    rows.push(...sortByFecha((g.gastoST2229Detalle || []).map((e) => ({ subvencion: g.label, tipo: "Gasto Subt. 22 y 29", ...e }))));
-    if (g.cd) {
-      const cdLabel = `Carrera Docente — ${g.label}`;
-      rows.push(...sortByFecha((g.cdIngresosDetalle || []).map((e) => ({ subvencion: cdLabel, tipo: "Ingresos", ...e }))));
-      rows.push(...sortByFecha((g.cdGastoDetalle || []).map((e) => ({ subvencion: cdLabel, tipo: "Gasto", ...e }))));
-    }
+    if (g) addGroup(g.label, g);
   });
+
   rows.push(...sortByFecha((estructura.junji.gastoST2229Detalle || []).map((e) => ({ subvencion: "JUNJI", tipo: "Gasto Subt. 22 y 29", ...e }))));
   ["operacion", "cd", "homologacion"].forEach((sub) => {
-    const label = "JUNJI " + JUNJI_SUB_LABELS[sub];
-    rows.push(...sortByFecha((estructura.junji[sub].ingresosDetalle || []).map((e) => ({ subvencion: label, tipo: "Ingresos", ...e }))));
-    rows.push(...sortByFecha((estructura.junji[sub].gastoDetalle || []).map((e) => ({ subvencion: label, tipo: "Gasto", ...e }))));
+    const subLabel = JUNJI_SUB_LABELS[sub];
+    rows.push(...sortByFecha((estructura.junji[sub].ingresosDetalle || []).map((e) => ({ subvencion: "JUNJI", tipo: `${subLabel} — Ingresos`, ...e }))));
+    rows.push(...sortByFecha((estructura.junji[sub].gastoDetalle || []).map((e) => ({ subvencion: "JUNJI", tipo: `${subLabel} — Gasto`, ...e }))));
   });
+
   const af = estructura.grupos[APORTE_FISCAL_KEY];
-  if (af) {
-    rows.push(...sortByFecha((af.ingresosDetalle || []).map((e) => ({ subvencion: af.label, tipo: "Ingresos", ...e }))));
-    rows.push(...sortByFecha((af.gastoRemuDetalle || []).map((e) => ({ subvencion: af.label, tipo: "Gasto Remuneraciones", ...e }))));
-    rows.push(...sortByFecha((af.gastoST2229Detalle || []).map((e) => ({ subvencion: af.label, tipo: "Gasto Subt. 22 y 29", ...e }))));
-  }
+  if (af) addGroup(af.label, af);
+
   return rows;
 }
