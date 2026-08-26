@@ -19,7 +19,7 @@ function Shell({ children }) {
 function Header() {
   return (
     <div className="mb-5 text-center">
-      <img src={import.meta.env.BASE_URL + "logo-slep-petorca.webp"} alt="Somos SLEP Petorca" style={{ height: 32, margin: "0 auto 12px" }} />
+      <img src={import.meta.env.BASE_URL + "logo-slep-full.png"} alt="SLEP Petorca — Servicio Local de Educación Pública" style={{ height: 48, margin: "0 auto 12px" }} />
       <h1 className="font-semibold" style={{ color: COLORS.navyDark, fontFamily: "var(--font-display)", fontSize: 17 }}>
         Situación de Déficit — Financiamiento Remuneraciones P02
       </h1>
