@@ -21,7 +21,7 @@ import {
   exportDatosMensualExcel, exportResumenExcel, exportEstructuraExcel, exportBitacoraExcel,
 } from "./lib/excelExport";
 
-const LOGO_SRC = import.meta.env.BASE_URL + "logo-slep-petorca.webp";
+const LOGO_SRC = import.meta.env.BASE_URL + "logo-slep-icon.png";
 
 const TABS = [
   { key: "datos", label: "Datos Mensuales", icon: LayoutGrid },
@@ -141,7 +141,7 @@ export default function App() {
               Cerrar sesión
             </button>
             <div style={{ background: "#fff", borderRadius: 8, padding: "5px 12px", display: "flex", alignItems: "center", boxShadow: "0 1px 3px rgba(0,0,0,0.15)" }}>
-              <img src={LOGO_SRC} alt="Somos SLEP Petorca" style={{ height: 24, width: "auto", display: "block" }} />
+              <img src={LOGO_SRC} alt="SLEP Petorca" style={{ height: 24, width: "auto", display: "block" }} />
             </div>
           </div>
         </header>
