@@ -209,13 +209,11 @@ export function PrintViewEstructura({ estructura, estructuraCalc }) {
             </tr>
           ))}
         </tbody>
-        <tfoot>
-          <tr style={{ fontWeight: 700 }}>
-            <td style={printCellStyle} colSpan={5}>Déficit acumulado periodo de análisis</td>
-            <td style={printCellStyleR}>{fmtCLP(estructuraCalc.deficitAcumuladoAPedir)}</td>
-          </tr>
-        </tfoot>
       </table>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 6, padding: "6px 8px", border: "1px solid #999", fontSize: 11, fontWeight: 700 }}>
+        <span>Déficit acumulado periodo de análisis</span>
+        <span>{fmtCLP(estructuraCalc.deficitAcumuladoAPedir)}</span>
+      </div>
 
       {(() => {
         const detailRows = buildEstructuraDetailRows(estructura);
