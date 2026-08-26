@@ -1,16 +1,11 @@
 import { fmtCLP, fmtPct, nowStamp } from "../../lib/format";
 import { MONTHS, FUENTE_DEFS } from "../../lib/calc";
 
-const LOGO_SRC = import.meta.env.BASE_URL + "logo-slep-petorca.webp";
-
 function PrintHeader({ title, subtitle }) {
   return (
-    <div className="flex items-center justify-between border-b pb-3 mb-4" style={{ borderColor: "#ccc" }}>
-      <div>
-        <h1 style={{ fontFamily: "var(--font-display)", fontSize: 18, fontWeight: 700 }}>{title}</h1>
-        <div style={{ fontSize: 11, color: "#555" }}>SLEP Petorca · {subtitle} · Generado {nowStamp()}</div>
-      </div>
-      <img src={LOGO_SRC} alt="Somos SLEP Petorca" style={{ height: 40 }} />
+    <div className="border-b pb-3 mb-4" style={{ borderColor: "#ccc" }}>
+      <h1 style={{ fontFamily: "var(--font-display)", fontSize: 18, fontWeight: 700 }}>{title}</h1>
+      <div style={{ fontSize: 11, color: "#555" }}>SLEP Petorca · {subtitle} · Generado {nowStamp()}</div>
     </div>
   );
 }

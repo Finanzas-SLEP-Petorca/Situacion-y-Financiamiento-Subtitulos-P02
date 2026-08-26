@@ -1,11 +1,12 @@
 import { useCallback, useState } from "react";
 import { LayoutGrid, FileSpreadsheet, ArrowLeftRight, ClipboardList, Loader2 } from "lucide-react";
 import { COLORS } from "./lib/colors";
-import { computeDetalleSum } from "./lib/format";
+import { computeDetalleSum, fmtChileStamp } from "./lib/format";
 import { MONTHS, FIELD_LABELS } from "./lib/calc";
+import { displayName } from "./lib/teamNames";
 import { useDashboardData } from "./hooks/useDashboardData";
 import { useAuth } from "./hooks/useAuth";
-import { SaveIndicator } from "./components/ui/Primitives";
+import { SyncStatus } from "./components/ui/Primitives";
 import DatosMensualesTab from "./components/tabs/DatosMensualesTab";
 import ResumenTab from "./components/tabs/ResumenTab";
 import EstructuraTab from "./components/tabs/EstructuraTab";
@@ -31,7 +32,7 @@ const TABS = [
 
 export default function App() {
   const data = useDashboardData();
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const [corte, setCorte] = useState(12);
   const [activeTab, setActiveTab] = useState("datos");
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
@@ -75,6 +76,8 @@ export default function App() {
 
   const { months, monthTotals, accumulated, eneroDetalle, estructura, estructuraCalc, changeLog } = data;
   const pendingChanges = changeLog.filter((c) => c.incluido && !c.reportado);
+  const lastLog = changeLog[0];
+  const lastEdit = lastLog ? { name: displayName(lastLog.userEmail), stamp: fmtChileStamp(lastLog.ts) } : null;
 
   function openDatosReport() {
     const r = buildDatosMensualReport({ monthIdx: selectedMonth, monthData: months[selectedMonth], monthTotal: monthTotals[selectedMonth], accumulated });
@@ -128,7 +131,7 @@ export default function App() {
             </div>
           </div>
           <div className="flex items-center gap-3 shrink-0">
-            <SaveIndicator status={data.saveStatus} />
+            <SyncStatus status={data.saveStatus} lastEdit={lastEdit} userEmail={user?.email} />
             <button
               onClick={logout}
               className="text-xs font-medium"

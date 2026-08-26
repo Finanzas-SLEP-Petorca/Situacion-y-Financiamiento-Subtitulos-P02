@@ -156,18 +156,22 @@ export function TabToolbar({ onExcel, onPDF, onReport, reportBadge }) {
   );
 }
 
-export function SaveIndicator({ status }) {
+export function SyncStatus({ status, lastEdit, userEmail }) {
   return (
-    <div className="flex items-center gap-1.5 text-xs" style={{ color: "rgba(255,255,255,0.75)" }}>
-      {status === "saving" ? (
-        <>
-          <Loader2 size={13} className="animate-spin" /> Guardando…
-        </>
-      ) : status === "saved" ? (
-        <>
-          <Save size={13} /> Guardado
-        </>
-      ) : null}
+    <div className="text-right text-xs" style={{ color: "rgba(255,255,255,0.75)" }}>
+      {userEmail && <div className="truncate">Conectado como: {userEmail}</div>}
+      <div className="flex items-center justify-end gap-1.5">
+        {status === "saving" ? (
+          <>
+            <Loader2 size={13} className="animate-spin" /> Guardando…
+          </>
+        ) : (
+          <>
+            <Save size={13} />
+            {lastEdit ? `Sincronizado · última edición por ${lastEdit.name} ${lastEdit.stamp}` : "Sincronizado"}
+          </>
+        )}
+      </div>
     </div>
   );
 }
