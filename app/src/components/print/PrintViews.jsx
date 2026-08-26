@@ -235,6 +235,7 @@ export function PrintViewEstructura({ estructura, estructuraCalc }) {
               const gastoRows = grp.rows.filter((e) => !e.tipo.includes("Ingresos"));
               const subtotalIngresos = ingresoRows.reduce((s, e) => s + (e.monto || 0), 0);
               const subtotalGastos = gastoRows.reduce((s, e) => s + (e.monto || 0), 0);
+              const diferencia = subtotalIngresos - subtotalGastos;
               return (
                 <div key={grp.subvencion} style={{ marginBottom: 10, breakInside: "avoid" }}>
                   <h3 style={{ fontSize: 11, fontWeight: 700, margin: "6px 0 3px", color: "#014F86" }}>{grp.subvencion}</h3>
@@ -275,6 +276,10 @@ export function PrintViewEstructura({ estructura, estructuraCalc }) {
                           <td style={printCellStyleR}>{fmtCLP(subtotalGastos)}</td>
                         </tr>
                       )}
+                      <tr style={{ fontWeight: 700, borderTop: "1px solid #999" }}>
+                        <td style={printCellStyle} colSpan={3}>Diferencia {grp.subvencion}</td>
+                        <td style={printCellStyleR}>{fmtCLP(diferencia)}</td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
