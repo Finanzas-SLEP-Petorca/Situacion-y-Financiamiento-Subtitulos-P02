@@ -149,16 +149,31 @@ function sortByFecha(rows) {
    sub-cuentas de JUNJI quedan como "tipo" dentro de esa misma subvención, no como
    entidades aparte), en el mismo orden que el resto de la pestaña (GRUPO_ORDER, JUNJI,
    Aporte Fiscal) y cada bloque ordenado cronológicamente. Usado por el Excel y el PDF
-   de Traspasos entre Cuentas. */
+   de Traspasos entre Cuentas.
+
+   Cada campo (ingresos, gastoRemu, gastoST2229, cdIngresos, cdGasto) se digita como un
+   monto total y opcionalmente se abre su desglose línea a línea; si no se abrió el
+   desglose (o quedó incompleto), se agrega una fila con el resto no desglosado para que
+   el subtotal del detalle siempre coincida con el monto usado en el cuadro principal. */
 export function buildEstructuraDetailRows(estructura) {
   const rows = [];
+  const addField = (subvencion, tipo, total, detalle) => {
+    const list = sortByFecha((detalle || []).map((e) => ({ subvencion, tipo, ...e })));
+    const detalleSum = list.reduce((s, e) => s + (e.monto || 0), 0);
+    const resto = Math.round((total || 0) - detalleSum);
+    if (resto !== 0) {
+      list.push({ subvencion, tipo, fecha: "", concepto: list.length ? "Resto sin desglose" : "Monto total", monto: resto });
+    }
+    rows.push(...list);
+  };
+
   const addGroup = (subvencion, g) => {
-    rows.push(...sortByFecha((g.ingresosDetalle || []).map((e) => ({ subvencion, tipo: "Ingresos", ...e }))));
-    rows.push(...sortByFecha((g.gastoRemuDetalle || []).map((e) => ({ subvencion, tipo: "Gasto Remuneraciones", ...e }))));
-    rows.push(...sortByFecha((g.gastoST2229Detalle || []).map((e) => ({ subvencion, tipo: "Gasto Subt. 22 y 29", ...e }))));
+    addField(subvencion, "Ingresos", g.ingresos, g.ingresosDetalle);
+    addField(subvencion, "Gasto Remuneraciones", g.gastoRemu, g.gastoRemuDetalle);
+    addField(subvencion, "Gasto Subt. 22 y 29", g.gastoST2229, g.gastoST2229Detalle);
     if (g.cd) {
-      rows.push(...sortByFecha((g.cdIngresosDetalle || []).map((e) => ({ subvencion, tipo: "Carrera Docente — Ingresos", ...e }))));
-      rows.push(...sortByFecha((g.cdGastoDetalle || []).map((e) => ({ subvencion, tipo: "Carrera Docente — Gasto", ...e }))));
+      addField(subvencion, "Carrera Docente — Ingresos", g.cdIngresos, g.cdIngresosDetalle);
+      addField(subvencion, "Carrera Docente — Gasto", g.cdGasto, g.cdGastoDetalle);
     }
   };
 
@@ -167,11 +182,11 @@ export function buildEstructuraDetailRows(estructura) {
     if (g) addGroup(g.label, g);
   });
 
-  rows.push(...sortByFecha((estructura.junji.gastoST2229Detalle || []).map((e) => ({ subvencion: "JUNJI", tipo: "Gasto Subt. 22 y 29", ...e }))));
+  addField("JUNJI", "Gasto Subt. 22 y 29", estructura.junji.gastoST2229, estructura.junji.gastoST2229Detalle);
   ["operacion", "cd", "homologacion"].forEach((sub) => {
     const subLabel = JUNJI_SUB_LABELS[sub];
-    rows.push(...sortByFecha((estructura.junji[sub].ingresosDetalle || []).map((e) => ({ subvencion: "JUNJI", tipo: `${subLabel} — Ingresos`, ...e }))));
-    rows.push(...sortByFecha((estructura.junji[sub].gastoDetalle || []).map((e) => ({ subvencion: "JUNJI", tipo: `${subLabel} — Gasto`, ...e }))));
+    addField("JUNJI", `${subLabel} — Ingresos`, estructura.junji[sub].ingresos, estructura.junji[sub].ingresosDetalle);
+    addField("JUNJI", `${subLabel} — Gasto`, estructura.junji[sub].gasto, estructura.junji[sub].gastoDetalle);
   });
 
   const af = estructura.grupos[APORTE_FISCAL_KEY];
