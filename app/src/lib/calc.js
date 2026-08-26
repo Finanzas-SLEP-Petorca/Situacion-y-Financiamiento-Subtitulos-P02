@@ -98,7 +98,7 @@ export function computeEstructura(estructura) {
     const cdGasto = g.cd ? (g.cdGasto || 0) : 0;
     const totalIngresos = (g.ingresos || 0) + cdIngresos;
     const totalGastoRemu = g.gastoRemu || 0;
-    const totalGastos = totalGastoRemu + (g.gastoST2229 || 0);
+    const totalGastos = totalGastoRemu + (g.gastoST2229 || 0) + cdGasto;
     const diferencia = totalIngresos - totalGastos;
     const cdDeficit = g.cd ? cdIngresos - cdGasto : null;
     groups[key] = { ...g, totalIngresos, totalGastoRemu, totalGastos, diferencia, cdDeficit };
