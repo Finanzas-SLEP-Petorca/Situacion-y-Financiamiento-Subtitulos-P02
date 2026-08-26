@@ -131,6 +131,17 @@ function GrupoRow({ gkey, g, updateEstructuraGrupo, toggleIncluirTotal, onOpenDe
           <td className="td-cell"></td>
         </tr>
       )}
+      {g.cd && (
+        <tr className="border-t" style={{ borderColor: COLORS.line, background: COLORS.mist }}>
+          <td className="td-cell text-xs font-semibold pl-6" style={{ color: COLORS.navyDark }}>Total {g.label} (incl. Carrera Docente)</td>
+          <td className="td-cell text-right font-mono font-semibold">{fmtNum(g.totalIngresos)}</td>
+          <td className="td-cell text-right text-xs" style={{ color: COLORS.inkSoft }}>—</td>
+          <td className="td-cell text-right text-xs" style={{ color: COLORS.inkSoft }}>—</td>
+          <td className="td-cell text-right font-mono font-semibold">{fmtNum(g.totalGastos)}</td>
+          <td className="td-cell text-right"><DeficitTag value={g.diferencia} small /></td>
+          <td className="td-cell"></td>
+        </tr>
+      )}
     </>
   );
 }
