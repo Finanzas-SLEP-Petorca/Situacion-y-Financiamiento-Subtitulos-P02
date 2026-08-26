@@ -1,0 +1,626 @@
+[
+{
+"tipo": "Real",
+"general": {
+"ingresos": 1326402066,
+"saldoSub": 0,
+"remuneraciones": 1559824035,
+"obs": "Sin resguardo para ST 22 Y 29"
+},
+"pie": {
+"ingresos": 506388302,
+"saldoSub": 0,
+"remuneraciones": 415045462,
+"obs": "Sin resguardo para ST 22 Y 29"
+},
+"sep": {
+"ingresos": 500181771,
+"saldoParaRemu": 320463402,
+"remuneraciones": 320463402,
+"obs": "36% resguardo para ST 22 Y 29"
+},
+"junji": {
+"ingresos": 163158694,
+"saldoSub": 0,
+"remuneraciones": 194387796,
+"obs": "Sin resguardo para ST 22 Y 29"
+},
+"aporteFiscal": {
+"ingresos": 155449000,
+"saldoSub": 0,
+"remuneraciones": 197924915,
+"obs": "NO APLICA a ST 22 Y 29"
+},
+"faep": {
+"ingresos": 0,
+"saldoSub": 0,
+"remuneraciones": 0,
+"obs": ""
+},
+"mantenimiento": {
+"ingresos": 0,
+"saldoSub": 0,
+"remuneraciones": 0,
+"obs": ""
+},
+"prorretencion": {
+"ingresos": 0,
+"obs": "Retencion puntual; sin remuneraciones asociadas"
+},
+"ajusteFAEP": 820483200,
+"ajusteFIGA": 0,
+"deficitLiquidos": 0
+},
+{
+"tipo": "Real",
+"general": {
+"ingresos": 1308356868,
+"saldoSub": 3769920,
+"remuneraciones": 1776131624,
+"obs": "10% de resguardo para operaciones"
+},
+"pie": {
+"ingresos": 583462376,
+"saldoSub": 0,
+"remuneraciones": 437015442,
+"obs": ""
+},
+"sep": {
+"ingresos": 527306236,
+"saldoParaRemu": 335040114,
+"remuneraciones": 335040114,
+"obs": ""
+},
+"junji": {
+"ingresos": 157044001,
+"saldoSub": 0,
+"remuneraciones": 244828590,
+"obs": "10% de resguardo para operaciones"
+},
+"aporteFiscal": {
+"ingresos": 43124326,
+"saldoSub": 0,
+"remuneraciones": 256727739,
+"obs": ""
+},
+"faep": {
+"ingresos": 0,
+"saldoSub": 0,
+"remuneraciones": 17802449,
+"obs": ""
+},
+"mantenimiento": {
+"ingresos": 149116725,
+"saldoSub": 149116725,
+"remuneraciones": 0,
+"obs": ""
+},
+"prorretencion": {
+"ingresos": 0,
+"obs": "Retencion puntual; sin remuneraciones asociadas"
+},
+"ajusteFAEP": 0,
+"ajusteFIGA": 0,
+"deficitLiquidos": 0
+},
+{
+"tipo": "Real",
+"general": {
+"ingresos": 1672673593,
+"saldoSub": 768960,
+"remuneraciones": 1566970484,
+"obs": ""
+},
+"pie": {
+"ingresos": 470186981,
+"saldoSub": 0,
+"remuneraciones": 421934119,
+"obs": ""
+},
+"sep": {
+"ingresos": 459526259,
+"saldoParaRemu": 315585052,
+"remuneraciones": 315585052,
+"obs": ""
+},
+"junji": {
+"ingresos": 134833236,
+"saldoSub": 0,
+"remuneraciones": 186817076,
+"obs": ""
+},
+"aporteFiscal": {
+"ingresos": 325168000,
+"saldoSub": 0,
+"remuneraciones": 116147803,
+"obs": ""
+},
+"faep": {
+"ingresos": 0,
+"saldoSub": 0,
+"remuneraciones": 8848540,
+"obs": ""
+},
+"mantenimiento": {
+"ingresos": 56421713,
+"saldoSub": 56421713,
+"remuneraciones": 0,
+"obs": ""
+},
+"prorretencion": {
+"ingresos": 0,
+"obs": "Retencion puntual; sin remuneraciones asociadas"
+},
+"ajusteFAEP": 0,
+"ajusteFIGA": 0,
+"deficitLiquidos": 0
+},
+{
+"tipo": "Real",
+"general": {
+"ingresos": 1454028092,
+"saldoSub": 135011881,
+"remuneraciones": 1716052663,
+"obs": ""
+},
+"pie": {
+"ingresos": 435270791,
+"saldoSub": 0,
+"remuneraciones": 440883098,
+"obs": ""
+},
+"sep": {
+"ingresos": 491082584,
+"saldoParaRemu": 322999889,
+"remuneraciones": 322999889,
+"obs": ""
+},
+"junji": {
+"ingresos": 136379816,
+"saldoSub": 0,
+"remuneraciones": 204800489,
+"obs": ""
+},
+"aporteFiscal": {
+"ingresos": 119214678,
+"saldoSub": 0,
+"remuneraciones": 73778125,
+"obs": ""
+},
+"faep": {
+"ingresos": 0,
+"saldoSub": 0,
+"remuneraciones": 8727050,
+"obs": ""
+},
+"mantenimiento": {
+"ingresos": 0,
+"saldoSub": 0,
+"remuneraciones": 0,
+"obs": ""
+},
+"prorretencion": {
+"ingresos": 0,
+"obs": "Retencion puntual; sin remuneraciones asociadas"
+},
+"ajusteFAEP": 0,
+"ajusteFIGA": 0,
+"deficitLiquidos": 0
+},
+{
+"tipo": "Real",
+"general": {
+"ingresos": 1486604191,
+"saldoSub": 70134191,
+"remuneraciones": 1643153153,
+"obs": ""
+},
+"pie": {
+"ingresos": 355401909,
+"saldoSub": 0,
+"remuneraciones": 436365856,
+"obs": ""
+},
+"sep": {
+"ingresos": 490420727,
+"saldoParaRemu": 320631554,
+"remuneraciones": 320631554,
+"obs": ""
+},
+"junji": {
+"ingresos": 139684788,
+"saldoSub": 0,
+"remuneraciones": 188196881,
+"obs": ""
+},
+"aporteFiscal": {
+"ingresos": 40200000,
+"saldoSub": 0,
+"remuneraciones": 83672771,
+"obs": ""
+},
+"faep": {
+"ingresos": 0,
+"saldoSub": 0,
+"remuneraciones": 0,
+"obs": ""
+},
+"mantenimiento": {
+"ingresos": 0,
+"saldoSub": 0,
+"remuneraciones": 0,
+"obs": ""
+},
+"prorretencion": {
+"ingresos": 0,
+"obs": "Retencion puntual; sin remuneraciones asociadas"
+},
+"ajusteFAEP": 0,
+"ajusteFIGA": 0,
+"deficitLiquidos": 0
+},
+{
+"tipo": "Real",
+"general": {
+"ingresos": 1285359224,
+"saldoSub": 218272631,
+"remuneraciones": 1681650227,
+"obs": ""
+},
+"pie": {
+"ingresos": 402149815,
+"saldoSub": 0,
+"remuneraciones": 448608628,
+"obs": ""
+},
+"sep": {
+"ingresos": 444076449,
+"saldoParaRemu": 330512710,
+"remuneraciones": 330512710,
+"obs": ""
+},
+"junji": {
+"ingresos": 140392679,
+"saldoSub": 0,
+"remuneraciones": 198951907,
+"obs": ""
+},
+"aporteFiscal": {
+"ingresos": 106069560,
+"saldoSub": 0,
+"remuneraciones": 105898497,
+"obs": ""
+},
+"faep": {
+"ingresos": 0,
+"saldoSub": 0,
+"remuneraciones": 0,
+"obs": ""
+},
+"mantenimiento": {
+"ingresos": 0,
+"saldoSub": 0,
+"remuneraciones": 0,
+"obs": ""
+},
+"prorretencion": {
+"ingresos": 155530344,
+"obs": ""
+},
+"ajusteFAEP": 0,
+"ajusteFIGA": 113956000,
+"deficitLiquidos": 0
+},
+{
+"tipo": "Real",
+"general": {
+"ingresos": 1535525069,
+"saldoSub": 172574240,
+"remuneraciones": 1732926442,
+"obs": ""
+},
+"pie": {
+"ingresos": 394453613,
+"saldoSub": 0,
+"remuneraciones": 449499038,
+"obs": ""
+},
+"sep": {
+"ingresos": 448310081,
+"saldoParaRemu": 333348234,
+"remuneraciones": 333348234,
+"obs": ""
+},
+"junji": {
+"ingresos": 156376584,
+"saldoSub": 0,
+"remuneraciones": 195158924,
+"obs": ""
+},
+"aporteFiscal": {
+"ingresos": 0,
+"saldoSub": 0,
+"remuneraciones": 76771134,
+"obs": ""
+},
+"faep": {
+"ingresos": 0,
+"saldoSub": 0,
+"remuneraciones": 0,
+"obs": ""
+},
+"mantenimiento": {
+"ingresos": 0,
+"saldoSub": 0,
+"remuneraciones": 0,
+"obs": ""
+},
+"prorretencion": {
+"ingresos": 0,
+"obs": ""
+},
+"ajusteFAEP": 0,
+"ajusteFIGA": 1383103000,
+"deficitLiquidos": 0
+},
+{
+"tipo": "Proyectado",
+"general": {
+"ingresos": 1494871712,
+"saldoSub": 550000000,
+"remuneraciones": 1817001456,
+"obs": "36,79% Resguardo para Subtitulo 22 y 29"
+},
+"pie": {
+"ingresos": 403432524,
+"saldoSub": 0,
+"remuneraciones": 444824507,
+"obs": ""
+},
+"sep": {
+"ingresos": 425780731,
+"saldoParaRemu": 328164166,
+"remuneraciones": 328164166,
+"obs": "22,9% Resguardo para Subtitulo 22 y 29"
+},
+"junji": {
+"ingresos": 116427506,
+"saldoSub": 0,
+"remuneraciones": 194102571,
+"obs": ""
+},
+"aporteFiscal": {
+"ingresos": 0,
+"saldoSub": 0,
+"remuneraciones": 88780801,
+"obs": ""
+},
+"faep": {
+"ingresos": 0,
+"saldoSub": 0,
+"remuneraciones": 0,
+"obs": ""
+},
+"mantenimiento": {
+"ingresos": 0,
+"saldoSub": 0,
+"remuneraciones": 0,
+"obs": ""
+},
+"prorretencion": {
+"ingresos": 0,
+"obs": ""
+},
+"ajusteFAEP": 0,
+"ajusteFIGA": 0,
+"deficitLiquidos": 0
+},
+{
+"tipo": "Proyectado",
+"general": {
+"ingresos": 1435829495,
+"saldoSub": 350000000,
+"remuneraciones": 1685909941,
+"obs": "24,38% Resguardo para Subtitulo 22 y 29"
+},
+"pie": {
+"ingresos": 384001779,
+"saldoSub": 0,
+"remuneraciones": 444824507,
+"obs": ""
+},
+"sep": {
+"ingresos": 460935752,
+"saldoParaRemu": 328164166,
+"remuneraciones": 328164166,
+"obs": "28,8% Resguardo para Subtitulo 22 y 29"
+},
+"junji": {
+"ingresos": 145484684,
+"saldoSub": 0,
+"remuneraciones": 194102571,
+"obs": ""
+},
+"aporteFiscal": {
+"ingresos": 48756520,
+"saldoSub": 0,
+"remuneraciones": 88780801,
+"obs": ""
+},
+"faep": {
+"ingresos": 0,
+"saldoSub": 0,
+"remuneraciones": 0,
+"obs": ""
+},
+"mantenimiento": {
+"ingresos": 0,
+"saldoSub": 0,
+"remuneraciones": 0,
+"obs": ""
+},
+"prorretencion": {
+"ingresos": 0,
+"obs": ""
+},
+"ajusteFAEP": 0,
+"ajusteFIGA": 0,
+"deficitLiquidos": 0
+},
+{
+"tipo": "Proyectado",
+"general": {
+"ingresos": 1435829495,
+"saldoSub": 350000000,
+"remuneraciones": 1685909941,
+"obs": "24,38% Resguardo para Subtitulo 22 y 29"
+},
+"pie": {
+"ingresos": 384001779,
+"saldoSub": 0,
+"remuneraciones": 444824507,
+"obs": ""
+},
+"sep": {
+"ingresos": 460935752,
+"saldoParaRemu": 328164166,
+"remuneraciones": 328164166,
+"obs": "28,8% Resguardo para Subtitulo 22 y 29"
+},
+"junji": {
+"ingresos": 145484684,
+"saldoSub": 0,
+"remuneraciones": 194102571,
+"obs": ""
+},
+"aporteFiscal": {
+"ingresos": 48756520,
+"saldoSub": 0,
+"remuneraciones": 88780801,
+"obs": ""
+},
+"faep": {
+"ingresos": 0,
+"saldoSub": 0,
+"remuneraciones": 0,
+"obs": ""
+},
+"mantenimiento": {
+"ingresos": 0,
+"saldoSub": 0,
+"remuneraciones": 0,
+"obs": ""
+},
+"prorretencion": {
+"ingresos": 0,
+"obs": ""
+},
+"ajusteFAEP": 0,
+"ajusteFIGA": 0,
+"deficitLiquidos": 0
+},
+{
+"tipo": "Proyectado",
+"general": {
+"ingresos": 1435829495,
+"saldoSub": 350000000,
+"remuneraciones": 1685909941,
+"obs": "24,38% Resguardo para Subtitulo 22 y 29"
+},
+"pie": {
+"ingresos": 384001779,
+"saldoSub": 0,
+"remuneraciones": 444824507,
+"obs": ""
+},
+"sep": {
+"ingresos": 460935752,
+"saldoParaRemu": 328164166,
+"remuneraciones": 328164166,
+"obs": "28,8% Resguardo para Subtitulo 22 y 29"
+},
+"junji": {
+"ingresos": 145484684,
+"saldoSub": 0,
+"remuneraciones": 194102571,
+"obs": ""
+},
+"aporteFiscal": {
+"ingresos": 48756520,
+"saldoSub": 0,
+"remuneraciones": 88780801,
+"obs": ""
+},
+"faep": {
+"ingresos": 0,
+"saldoSub": 0,
+"remuneraciones": 0,
+"obs": ""
+},
+"mantenimiento": {
+"ingresos": 0,
+"saldoSub": 0,
+"remuneraciones": 0,
+"obs": ""
+},
+"prorretencion": {
+"ingresos": 0,
+"obs": ""
+},
+"ajusteFAEP": 0,
+"ajusteFIGA": 0,
+"deficitLiquidos": 0
+},
+{
+"tipo": "Proyectado",
+"general": {
+"ingresos": 1435829495,
+"saldoSub": 350000000,
+"remuneraciones": 1685909941,
+"obs": "24,38% Resguardo para Subtitulo 22 y 29"
+},
+"pie": {
+"ingresos": 384001779,
+"saldoSub": 0,
+"remuneraciones": 444824507,
+"obs": ""
+},
+"sep": {
+"ingresos": 460935752,
+"saldoParaRemu": 328164166,
+"remuneraciones": 328164166,
+"obs": "28,8% Resguardo para Subtitulo 22 y 29"
+},
+"junji": {
+"ingresos": 145484684,
+"saldoSub": 0,
+"remuneraciones": 194102571,
+"obs": ""
+},
+"aporteFiscal": {
+"ingresos": 48756520,
+"saldoSub": 0,
+"remuneraciones": 88780801,
+"obs": ""
+},
+"faep": {
+"ingresos": 0,
+"saldoSub": 0,
+"remuneraciones": 0,
+"obs": ""
+},
+"mantenimiento": {
+"ingresos": 0,
+"saldoSub": 0,
+"remuneraciones": 0,
+"obs": ""
+},
+"prorretencion": {
+"ingresos": 0,
+"obs": ""
+},
+"ajusteFAEP": 0,
+"ajusteFIGA": 0,
+"deficitLiquidos": 0
+}
+]

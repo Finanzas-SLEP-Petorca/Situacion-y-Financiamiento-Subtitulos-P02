@@ -1,0 +1,97 @@
+{
+  "periodo": "Junio - Julio 2026",
+  "grupos": {
+    "general": {
+      "label": "Subvención General",
+      "ingresos": 1071586263,
+      "gastoRemu": 1684423840,
+      "cd": true,
+      "cdIngresos": 415017928,
+      "cdGasto": 605003635,
+      "gastoST2229": 258577452,
+      "incluirTotal": true
+    },
+    "pie": {
+      "label": "PIE",
+      "ingresos": 256421443,
+      "gastoRemu": 433995230,
+      "cd": true,
+      "cdIngresos": 85131683,
+      "cdGasto": 122850303,
+      "gastoST2229": 35000000,
+      "incluirTotal": true
+    },
+    "sep": {
+      "label": "SEP",
+      "ingresos": 416289229,
+      "gastoRemu": 319183478,
+      "cd": true,
+      "cdIngresos": 31924456,
+      "cdGasto": 46695007,
+      "gastoST2229": 132291372,
+      "incluirTotal": false
+    },
+    "aporteFiscal": {
+      "label": "Aporte Fiscal",
+      "ingresos": 0,
+      "gastoRemu": 78304926,
+      "cd": false,
+      "gastoST2229": 0,
+      "incluirTotal": true
+    }
+  },
+  "junji": {
+    "operacion": {
+      "ingresos": 104072763,
+      "gasto": 183680084
+    },
+    "cd": {
+      "ingresos": 13866022,
+      "gasto": 13866022
+    },
+    "homologacion": {
+      "ingresos": 22453894,
+      "gasto": 22453894
+    },
+    "gastoST2229": 54173977,
+    "incluirTotal": true
+  },
+  "sacados": [
+    {
+      "id": 1,
+      "fecha": "2026-06-12",
+      "proceso": "Devolución mes mayo",
+      "cuentaOrigen": "Cuenta General / fondos comunes",
+      "cuentaDestino": "SEP",
+      "monto": -473234227,
+      "rex": "REX 296 del 12/06/2026"
+    },
+    {
+      "id": 2,
+      "fecha": "2026-06-12",
+      "proceso": "Devolución mes mayo",
+      "cuentaOrigen": "Cuenta General / fondos comunes",
+      "cuentaDestino": "GENERAL",
+      "monto": -343072993,
+      "rex": "REX 296 del 12/06/2026"
+    },
+    {
+      "id": 3,
+      "fecha": "2026-06-12",
+      "proceso": "Devolución mes mayo",
+      "cuentaOrigen": "Cuenta General / fondos comunes",
+      "cuentaDestino": "APORTE FISCAL LIBRE",
+      "monto": -38299560,
+      "rex": "REX 296 del 12/06/2026"
+    },
+    {
+      "id": 4,
+      "fecha": "2026-06-12",
+      "proceso": "Devolución mes mayo",
+      "cuentaOrigen": "Cuenta General / fondos comunes",
+      "cuentaDestino": "JUNJI",
+      "monto": -8000000,
+      "rex": "REX 296 del 12/06/2026"
+    }
+  ]
+}
