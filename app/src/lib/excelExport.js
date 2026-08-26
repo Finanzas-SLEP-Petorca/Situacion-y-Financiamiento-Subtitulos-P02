@@ -112,7 +112,7 @@ function estructuraSheetAOA(estructura, estructuraCalc) {
   aoa.push(["Fecha", "Proceso / Motivo", "Cuenta Origen (Desde)", "Cuenta Destino (Hacia)", "Monto", "N° REX"]);
   estructura.sacados.forEach((s) => aoa.push([s.fecha || "", s.proceso || "", s.cuentaOrigen || "", s.cuentaDestino || "", s.monto, s.rex || ""]));
   aoa.push([]);
-  aoa.push(["Déficit acumulado total a pedir en oficio", "", "", "", "", estructuraCalc.deficitAcumuladoAPedir]);
+  aoa.push(["Déficit acumulado periodo de análisis", "", "", "", "", estructuraCalc.deficitAcumuladoAPedir]);
 
   const detailRows = buildEstructuraDetailRows(estructura);
   if (detailRows.length) {
