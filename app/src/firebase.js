@@ -11,9 +11,15 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-export const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+export const isFirebaseConfigured = Boolean(
+  firebaseConfig.apiKey && firebaseConfig.projectId && firebaseConfig.appId
+);
+
+export const app = isFirebaseConfigured
+  ? (getApps().length ? getApps()[0] : initializeApp(firebaseConfig))
+  : null;
+export const auth = isFirebaseConfigured ? getAuth(app) : null;
+export const db = isFirebaseConfigured ? getFirestore(app) : null;
 
 /* Año del ejercicio que se está trabajando. Las colecciones de Firestore
    cuelgan de situacionDeficit/{YEAR}/... — ver doc de traspaso a Firebase. */
