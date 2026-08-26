@@ -1,5 +1,5 @@
 import { fmtCLP, fmtPct, nowStamp } from "../../lib/format";
-import { MONTHS, FUENTE_DEFS } from "../../lib/calc";
+import { MONTHS, FUENTE_DEFS, GRUPO_ORDER, buildEstructuraDetailRows } from "../../lib/calc";
 
 function PrintHeader({ title, subtitle }) {
   return (
@@ -155,7 +155,7 @@ export function PrintViewEstructura({ estructura, estructuraCalc }) {
           </tr>
         </thead>
         <tbody>
-          {Object.values(estructuraCalc.groups).map((g) => (
+          {GRUPO_ORDER.map((key) => estructuraCalc.groups[key]).filter(Boolean).map((g) => (
             <tr key={g.label}>
               <td style={printCellStyle}>{g.label}</td>
               <td style={printCellStyleR}>{fmtCLP(g.totalIngresos)}</td>
@@ -206,6 +206,36 @@ export function PrintViewEstructura({ estructura, estructuraCalc }) {
           </tr>
         </tfoot>
       </table>
+
+      {(() => {
+        const detailRows = buildEstructuraDetailRows(estructura);
+        if (!detailRows.length) return null;
+        return (
+          <>
+            <h2 style={{ fontSize: 13, fontWeight: 700, margin: "16px 0 6px" }}>Detalle de Ingresos y Gastos por subvención</h2>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 10 }}>
+              <thead>
+                <tr>
+                  {["Subvención", "Tipo", "Fecha", "Concepto", "Monto"].map((h) => (
+                    <th key={h} style={{ ...printHeadStyle, textAlign: h === "Monto" ? "right" : "left" }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {detailRows.map((e, i) => (
+                  <tr key={i}>
+                    <td style={printCellStyle}>{e.subvencion}</td>
+                    <td style={printCellStyle}>{e.tipo}</td>
+                    <td style={printCellStyle}>{e.fecha || ""}</td>
+                    <td style={printCellStyle}>{e.concepto || ""}</td>
+                    <td style={printCellStyleR}>{fmtCLP(e.monto)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </>
+        );
+      })()}
     </div>
   );
 }

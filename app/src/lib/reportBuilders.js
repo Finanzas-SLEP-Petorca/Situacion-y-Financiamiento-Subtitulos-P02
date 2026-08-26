@@ -1,5 +1,5 @@
 import { fmtCLP, nowStamp } from "./format";
-import { MONTHS, MONTHS_SHORT, FUENTE_DEFS } from "./calc";
+import { MONTHS, MONTHS_SHORT, FUENTE_DEFS, GRUPO_ORDER } from "./calc";
 
 /* ------------------------- Reportes por correo (narrativos) ------------------------- */
 /* Portado 1:1 desde reference/dashboard_deficit_slep_petorca_1.jsx */
@@ -81,7 +81,8 @@ export function buildEstructuraReport({ estructura, estructuraCalc }) {
   lines.push("");
   lines.push(`Junto con saludar, remito los antecedentes para fundamentar la Resolución Exenta (REX) de traspaso de fondos entre cuentas corrientes, correspondiente al período ${estructura.periodo}:`);
   lines.push("");
-  Object.values(estructuraCalc.groups).forEach((g) => {
+  GRUPO_ORDER.filter((key) => estructuraCalc.groups[key]).forEach((key) => {
+    const g = estructuraCalc.groups[key];
     const estado = g.diferencia >= 0 ? "saldo disponible" : "déficit";
     lines.push(`- ${g.label}: ${estado} de ${fmtCLP(Math.abs(g.diferencia))}${g.incluirTotal ? "" : " (no incluida en el total final)"}`);
   });

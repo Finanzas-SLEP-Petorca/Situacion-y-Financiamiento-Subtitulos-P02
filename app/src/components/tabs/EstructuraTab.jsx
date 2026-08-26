@@ -1,6 +1,7 @@
 import { Plus, Trash2, Info } from "lucide-react";
 import { COLORS } from "../../lib/colors";
 import { fmtCLP, fmtNum, fmtPct } from "../../lib/format";
+import { GRUPO_ORDER } from "../../lib/calc";
 import { DeficitTag, TextCell, EditableCell, FieldBlock, SectionIntro, TabToolbar, AmountCell } from "../ui/Primitives";
 
 const CD_LABELS = { general: "Subvención General", sep: "SEP", pie: "PIE" };
@@ -188,8 +189,8 @@ export default function EstructuraTab({
             </tr>
           </thead>
           <tbody>
-            {Object.entries(estructuraCalc.groups).map(([key, g]) => (
-              <GrupoRow key={key} gkey={key} g={g} updateEstructuraGrupo={updateEstructuraGrupo} toggleIncluirTotal={toggleIncluirTotal} onOpenDetalle={onOpenDetalle} />
+            {GRUPO_ORDER.filter((key) => estructuraCalc.groups[key]).map((key) => (
+              <GrupoRow key={key} gkey={key} g={estructuraCalc.groups[key]} updateEstructuraGrupo={updateEstructuraGrupo} toggleIncluirTotal={toggleIncluirTotal} onOpenDetalle={onOpenDetalle} />
             ))}
 
             <tr className="border-t" style={{ borderColor: COLORS.line }}>
