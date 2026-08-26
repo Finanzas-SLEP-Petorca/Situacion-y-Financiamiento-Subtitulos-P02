@@ -1,7 +1,73 @@
 import { Plus, Trash2, Info } from "lucide-react";
 import { COLORS } from "../../lib/colors";
-import { fmtCLP, fmtNum } from "../../lib/format";
+import { fmtCLP, fmtNum, fmtPct } from "../../lib/format";
 import { DeficitTag, TextCell, EditableCell, FieldBlock, SectionIntro, TabToolbar, AmountCell } from "../ui/Primitives";
+
+const CD_LABELS = { general: "Subvención General", sep: "SEP", pie: "PIE" };
+
+function CarreraDocentePanel({ estructura, updateCdIngresoTotal }) {
+  const total = estructura.cdIngresoTotal || 0;
+  const gastos = {
+    general: estructura.grupos.general?.cdGasto || 0,
+    sep: estructura.grupos.sep?.cdGasto || 0,
+    pie: estructura.grupos.pie?.cdGasto || 0,
+  };
+  const gastoTotal = gastos.general + gastos.sep + gastos.pie;
+  const ingresos = {
+    general: estructura.grupos.general?.cdIngresos || 0,
+    sep: estructura.grupos.sep?.cdIngresos || 0,
+    pie: estructura.grupos.pie?.cdIngresos || 0,
+  };
+  const ingresoRepartido = ingresos.general + ingresos.sep + ingresos.pie;
+
+  return (
+    <div className="card mb-4">
+      <div className="flex items-start justify-between mb-3 flex-wrap gap-3">
+        <div style={{ maxWidth: 520 }}>
+          <h3 className="card-title">Carrera Docente — reparto del ingreso</h3>
+          <p className="text-[11px] mt-0.5" style={{ color: COLORS.inkSoft }}>
+            El ingreso de Carrera Docente llega como un solo monto total. Aquí se reparte automáticamente entre General, SEP y PIE en la misma proporción en que cada una gastó en remuneraciones de Carrera Docente ese mes (columna "Gasto Carrera Docente" de la tabla de arriba). El resultado se guarda como el ingreso de Carrera Docente de cada subvención.
+          </p>
+        </div>
+        <FieldBlock label="Ingreso total Carrera Docente del mes">
+          <EditableCell value={total} onCommit={updateCdIngresoTotal} width={180} />
+        </FieldBlock>
+      </div>
+      <div className="overflow-x-auto rounded-xl border" style={{ borderColor: COLORS.line }}>
+        <table className="w-full text-sm border-collapse">
+          <thead>
+            <tr style={{ background: COLORS.mist }}>
+              <th className="th-cell text-left">Subvención</th>
+              <th className="th-cell text-right">Gasto Carrera Docente</th>
+              <th className="th-cell text-right">% del gasto</th>
+              <th className="th-cell text-right">Ingreso repartido</th>
+            </tr>
+          </thead>
+          <tbody>
+            {["general", "sep", "pie"].map((k) => (
+              <tr key={k} className="border-t" style={{ borderColor: COLORS.line }}>
+                <td className="td-cell font-medium">{CD_LABELS[k]}</td>
+                <td className="td-cell text-right font-mono">{fmtNum(gastos[k])}</td>
+                <td className="td-cell text-right font-mono text-xs" style={{ color: COLORS.inkSoft }}>
+                  {fmtPct(gastoTotal ? gastos[k] / gastoTotal : 0)}
+                </td>
+                <td className="td-cell text-right font-mono font-semibold">{fmtNum(ingresos[k])}</td>
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr style={{ background: COLORS.mist }}>
+              <td className="td-cell font-bold">Total</td>
+              <td className="td-cell text-right font-mono font-semibold">{fmtNum(gastoTotal)}</td>
+              <td className="td-cell text-right"></td>
+              <td className="td-cell text-right font-mono font-bold">{fmtNum(ingresoRepartido)}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  );
+}
 
 function GrupoRow({ gkey, g, updateEstructuraGrupo, toggleIncluirTotal, onOpenDetalle }) {
   return (
@@ -70,7 +136,7 @@ function GrupoRow({ gkey, g, updateEstructuraGrupo, toggleIncluirTotal, onOpenDe
 }
 
 export default function EstructuraTab({
-  estructura, estructuraCalc, updatePeriodo, updateEstructuraGrupo, updateEstructuraJunji,
+  estructura, estructuraCalc, updatePeriodo, updateEstructuraGrupo, updateCdIngresoTotal, updateEstructuraJunji,
   toggleIncluirTotal, addSacado, updateSacado, removeSacado,
   onExcel, onPDF, onReport, onOpenDetalle,
 }) {
@@ -175,9 +241,11 @@ export default function EstructuraTab({
           </tfoot>
         </table>
       </div>
-      <p className="text-[11px] mb-6 -mt-2" style={{ color: COLORS.inkSoft }}>
+      <p className="text-[11px] mb-4 -mt-2" style={{ color: COLORS.inkSoft }}>
         "En total" marca qué subvenciones se suman en la Diferencia Total Final. Por defecto SEP queda fuera (como en la planilla original), ya que su déficit/superávit se autocontiene dentro de la propia subvención. Ajusta la casilla si tu criterio cambia.
       </p>
+
+      <CarreraDocentePanel estructura={estructura} updateCdIngresoTotal={updateCdIngresoTotal} />
 
       <div className="card">
         <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
