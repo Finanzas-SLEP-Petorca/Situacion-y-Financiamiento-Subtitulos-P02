@@ -1,5 +1,5 @@
 import * as XLSX from "xlsx";
-import { MONTHS, MONTHS_SHORT, FUENTE_DEFS, GRUPO_ORDER, buildEstructuraDetailRows } from "./calc";
+import { MONTHS, MONTHS_SHORT, FUENTE_DEFS, GRUPO_ORDER, APORTE_FISCAL_KEY, buildEstructuraDetailRows } from "./calc";
 
 /* -------------------------------- Excel: hojas (AOA) ------------------------------ */
 /* Portado 1:1 desde reference/dashboard_deficit_slep_petorca_1.jsx */
@@ -99,8 +99,14 @@ function estructuraSheetAOA(estructura, estructuraCalc) {
   });
   const jc = estructuraCalc.junjiCalc;
   aoa.push(["JUNJI", jc.ingresos, jc.gasto, estructura.junji.gastoST2229, jc.totalGastos, jc.diferencia, estructura.junji.incluirTotal ? "Sí" : "No"]);
+  aoa.push(["  Total JUNJI", jc.ingresos, jc.gasto, estructura.junji.gastoST2229, jc.totalGastos, jc.diferencia, ""]);
+
+  const af = estructuraCalc.groups[APORTE_FISCAL_KEY];
+  if (af) {
+    aoa.push([af.label, af.totalIngresos, af.totalGastoRemu, af.gastoST2229, af.totalGastos, af.diferencia, af.incluirTotal ? "Sí" : "No"]);
+  }
   aoa.push([]);
-  aoa.push(["Total Final (Diferencia)", "", "", "", "", estructuraCalc.diferenciaFinal]);
+  aoa.push(["Total Final", estructuraCalc.ingresosFinal, estructuraCalc.gastoRemuFinal, estructuraCalc.st2229Final, estructuraCalc.gastosFinal, estructuraCalc.diferenciaFinal, ""]);
   aoa.push([]);
   aoa.push(["Registro de traspasos entre cuentas (REX)"]);
   aoa.push(["Fecha", "Proceso / Motivo", "Cuenta Origen (Desde)", "Cuenta Destino (Hacia)", "Monto", "N° REX"]);

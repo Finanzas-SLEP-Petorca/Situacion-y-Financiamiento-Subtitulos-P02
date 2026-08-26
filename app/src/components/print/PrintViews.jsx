@@ -1,5 +1,5 @@
 import { fmtCLP, fmtPct, nowStamp } from "../../lib/format";
-import { MONTHS, FUENTE_DEFS, GRUPO_ORDER, buildEstructuraDetailRows } from "../../lib/calc";
+import { MONTHS, FUENTE_DEFS, GRUPO_ORDER, APORTE_FISCAL_KEY, buildEstructuraDetailRows } from "../../lib/calc";
 
 function PrintHeader({ title, subtitle }) {
   return (
@@ -169,10 +169,20 @@ export function PrintViewEstructura({ estructura, estructuraCalc }) {
             <td style={printCellStyleR}>{fmtCLP(estructuraCalc.junjiCalc.totalGastos)}</td>
             <td style={printCellStyleR}>{fmtCLP(estructuraCalc.junjiCalc.diferencia)}</td>
           </tr>
+          {estructuraCalc.groups[APORTE_FISCAL_KEY] && (
+            <tr>
+              <td style={printCellStyle}>{estructuraCalc.groups[APORTE_FISCAL_KEY].label}</td>
+              <td style={printCellStyleR}>{fmtCLP(estructuraCalc.groups[APORTE_FISCAL_KEY].totalIngresos)}</td>
+              <td style={printCellStyleR}>{fmtCLP(estructuraCalc.groups[APORTE_FISCAL_KEY].totalGastos)}</td>
+              <td style={printCellStyleR}>{fmtCLP(estructuraCalc.groups[APORTE_FISCAL_KEY].diferencia)}</td>
+            </tr>
+          )}
         </tbody>
         <tfoot>
           <tr style={{ fontWeight: 700 }}>
-            <td style={printCellStyle} colSpan={3}>Diferencia Total Final</td>
+            <td style={printCellStyle}>Total Final</td>
+            <td style={printCellStyleR}>{fmtCLP(estructuraCalc.ingresosFinal)}</td>
+            <td style={printCellStyleR}>{fmtCLP(estructuraCalc.gastosFinal)}</td>
             <td style={printCellStyleR}>{fmtCLP(estructuraCalc.diferenciaFinal)}</td>
           </tr>
         </tfoot>

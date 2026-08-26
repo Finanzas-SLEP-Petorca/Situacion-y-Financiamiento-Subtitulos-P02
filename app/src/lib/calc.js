@@ -13,8 +13,11 @@ export const FUENTE_DEFS = [
 ];
 
 /* Orden fijo de subvenciones en Estructura Déficit / Traspasos — independiente del
-   orden de campos que devuelva Firestore, que puede variar entre actualizaciones. */
-export const GRUPO_ORDER = ["general", "sep", "pie", "aporteFiscal"];
+   orden de campos que devuelva Firestore, que puede variar entre actualizaciones.
+   Aporte Fiscal no tiene fila de Carrera Docente y se muestra al final, después de
+   JUNJI (ver APORTE_FISCAL_KEY), no dentro de este orden. */
+export const GRUPO_ORDER = ["general", "sep", "pie"];
+export const APORTE_FISCAL_KEY = "aporteFiscal";
 
 export const FIELD_LABELS = {
   ingresos: "Ingresos Totales",
@@ -96,20 +99,23 @@ export function computeAccumulated(monthTotalsArr) {
 
 export function computeEstructura(estructura) {
   const groups = {};
-  let ingresosFinal = 0, gastoRemuFinal = 0, st2229Final = 0, diferenciaFinal = 0;
+  let ingresosFinal = 0, gastoRemuFinal = 0, st2229Final = 0, gastosFinal = 0, diferenciaFinal = 0;
   Object.entries(estructura.grupos).forEach(([key, g]) => {
     const cdIngresos = g.cd ? (g.cdIngresos || 0) : 0;
     const cdGasto = g.cd ? (g.cdGasto || 0) : 0;
     const totalIngresos = (g.ingresos || 0) + cdIngresos;
-    const totalGastoRemu = g.gastoRemu || 0;
-    const totalGastos = totalGastoRemu + (g.gastoST2229 || 0) + cdGasto;
+    const totalGastoRemu = (g.gastoRemu || 0) + cdGasto;
+    const totalGastos = totalGastoRemu + (g.gastoST2229 || 0);
     const diferencia = totalIngresos - totalGastos;
     const cdDeficit = g.cd ? cdIngresos - cdGasto : null;
     groups[key] = { ...g, totalIngresos, totalGastoRemu, totalGastos, diferencia, cdDeficit };
-    ingresosFinal += totalIngresos;
-    gastoRemuFinal += totalGastoRemu;
-    st2229Final += g.gastoST2229 || 0;
-    if (g.incluirTotal) diferenciaFinal += diferencia;
+    if (g.incluirTotal) {
+      ingresosFinal += totalIngresos;
+      gastoRemuFinal += totalGastoRemu;
+      st2229Final += g.gastoST2229 || 0;
+      gastosFinal += totalGastos;
+      diferenciaFinal += diferencia;
+    }
   });
 
   const j = estructura.junji;
@@ -118,15 +124,18 @@ export function computeEstructura(estructura) {
   const junjiTotalGastos = junjiGasto + (j.gastoST2229 || 0);
   const junjiDiferencia = junjiIngresos - junjiTotalGastos;
   const junjiCalc = { ingresos: junjiIngresos, gasto: junjiGasto, totalGastos: junjiTotalGastos, diferencia: junjiDiferencia };
-  ingresosFinal += junjiIngresos;
-  gastoRemuFinal += junjiGasto;
-  st2229Final += j.gastoST2229 || 0;
-  if (j.incluirTotal) diferenciaFinal += junjiDiferencia;
+  if (j.incluirTotal) {
+    ingresosFinal += junjiIngresos;
+    gastoRemuFinal += junjiGasto;
+    st2229Final += j.gastoST2229 || 0;
+    gastosFinal += junjiTotalGastos;
+    diferenciaFinal += junjiDiferencia;
+  }
 
   const sacadosSum = (estructura.sacados || []).reduce((s, r) => s + (r.monto || 0), 0);
   const deficitAcumuladoAPedir = diferenciaFinal + sacadosSum;
 
-  return { groups, junjiCalc, ingresosFinal, gastoRemuFinal, st2229Final, diferenciaFinal, sacadosSum, deficitAcumuladoAPedir };
+  return { groups, junjiCalc, ingresosFinal, gastoRemuFinal, st2229Final, gastosFinal, diferenciaFinal, sacadosSum, deficitAcumuladoAPedir };
 }
 
 const JUNJI_SUB_LABELS = { operacion: "Operación", cd: "Convenio CD", homologacion: "Homologación" };
@@ -158,5 +167,11 @@ export function buildEstructuraDetailRows(estructura) {
     rows.push(...sortByFecha((estructura.junji[sub].ingresosDetalle || []).map((e) => ({ subvencion: label, tipo: "Ingresos", ...e }))));
     rows.push(...sortByFecha((estructura.junji[sub].gastoDetalle || []).map((e) => ({ subvencion: label, tipo: "Gasto", ...e }))));
   });
+  const af = estructura.grupos[APORTE_FISCAL_KEY];
+  if (af) {
+    rows.push(...sortByFecha((af.ingresosDetalle || []).map((e) => ({ subvencion: af.label, tipo: "Ingresos", ...e }))));
+    rows.push(...sortByFecha((af.gastoRemuDetalle || []).map((e) => ({ subvencion: af.label, tipo: "Gasto Remuneraciones", ...e }))));
+    rows.push(...sortByFecha((af.gastoST2229Detalle || []).map((e) => ({ subvencion: af.label, tipo: "Gasto Subt. 22 y 29", ...e }))));
+  }
   return rows;
 }
