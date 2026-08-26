@@ -12,6 +12,22 @@ import seedEstructura from "../data/seedEstructura.json";
 
 const pad = (n) => String(n).padStart(2, "0");
 const base = () => `situacionDeficit/${YEAR}`;
+
+/* Carrera Docente: el ingreso llega como un solo monto total y se reparte entre
+   General, SEP y PIE en la misma proporción en que cada una gastó en remuneraciones
+   de Carrera Docente ese mes. */
+const CD_KEYS = ["general", "sep", "pie"];
+
+function computeCdRedistribution(estructura) {
+  const total = estructura.cdIngresoTotal || 0;
+  const gastos = CD_KEYS.map((k) => estructura.grupos[k]?.cdGasto || 0);
+  const gastoTotal = gastos.reduce((s, v) => s + v, 0);
+  if (!gastoTotal) return { general: 0, sep: 0, pie: 0 };
+  const general = Math.round((gastos[0] / gastoTotal) * total);
+  const sep = Math.round((gastos[1] / gastoTotal) * total);
+  const pie = total - general - sep;
+  return { general, sep, pie };
+}
 const monthRef = (i) => doc(db, `${base()}/months/${pad(i + 1)}`);
 const eneroRef = () => doc(db, `${base()}/eneroDetalle/current`);
 const estructuraRef = () => doc(db, `${base()}/estructura/current`);
@@ -226,8 +242,26 @@ export function useDashboardData() {
 
   const updateEstructuraGrupo = useCallback((key, field, newVal) => {
     const oldVal = estructura.grupos[key][field];
-    withSaving(() => updateDoc(estructuraRef(), { [`grupos.${key}.${field}`]: newVal }));
+    const patch = { [`grupos.${key}.${field}`]: newVal };
+    if (field === "cdGasto" && CD_KEYS.includes(key)) {
+      const nextEstructura = { ...estructura, grupos: { ...estructura.grupos, [key]: { ...estructura.grupos[key], cdGasto: newVal } } };
+      const redis = computeCdRedistribution(nextEstructura);
+      CD_KEYS.forEach((k) => { patch[`grupos.${k}.cdIngresos`] = redis[k]; });
+    }
+    withSaving(() => updateDoc(estructuraRef(), patch));
     if (oldVal !== newVal) logChange("Estructura Déficit", estructura.periodo, estructura.grupos[key].label, FIELD_LABELS[field] || field, oldVal, newVal);
+  }, [estructura, withSaving, logChange]);
+
+  const updateCdIngresoTotal = useCallback((newVal) => {
+    const oldVal = estructura.cdIngresoTotal || 0;
+    const nextEstructura = { ...estructura, cdIngresoTotal: newVal };
+    const redis = computeCdRedistribution(nextEstructura);
+    const patch = { cdIngresoTotal: newVal };
+    CD_KEYS.forEach((k) => { patch[`grupos.${k}.cdIngresos`] = redis[k]; });
+    withSaving(() => updateDoc(estructuraRef(), patch));
+    if (oldVal !== newVal) {
+      logChange("Estructura Déficit", estructura.periodo, "Carrera Docente", "Ingreso total (reparto)", oldVal, newVal);
+    }
   }, [estructura, withSaving, logChange]);
 
   const updateEstructuraJunji = useCallback((sub, field, newVal) => {
@@ -289,7 +323,7 @@ export function useDashboardData() {
     addDetalleEntry, updateDetalleEntry, removeDetalleEntry,
     updateMonthMeta, aplicarPromedioReal, updateEneroDetalle,
     addDetalleEntryEstructura, updateDetalleEntryEstructura, removeDetalleEntryEstructura,
-    updateEstructuraGrupo, updateEstructuraJunji, toggleIncluirTotal, updatePeriodo,
+    updateEstructuraGrupo, updateCdIngresoTotal, updateEstructuraJunji, toggleIncluirTotal, updatePeriodo,
     addSacado, updateSacado, removeSacado,
     updateLogNota, toggleLogIncluido, removeLogEntry, marcarReportados,
     getEstructuraTarget,

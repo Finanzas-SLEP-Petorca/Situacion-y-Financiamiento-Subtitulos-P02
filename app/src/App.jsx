@@ -214,6 +214,7 @@ export default function App() {
               estructura={estructura}
               estructuraCalc={estructuraCalc}
               updatePeriodo={data.updatePeriodo}
+              updateCdIngresoTotal={data.updateCdIngresoTotal}
               updateEstructuraGrupo={data.updateEstructuraGrupo}
               updateEstructuraJunji={data.updateEstructuraJunji}
               toggleIncluirTotal={data.toggleIncluirTotal}
