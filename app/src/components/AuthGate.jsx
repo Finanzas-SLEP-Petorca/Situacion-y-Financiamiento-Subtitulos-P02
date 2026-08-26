@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mail, Loader2, ShieldAlert, AlertTriangle } from "lucide-react";
+import { Mail, Loader2, ShieldAlert } from "lucide-react";
 import { COLORS } from "../lib/colors";
 import { useAuth } from "../hooks/useAuth";
 
@@ -45,24 +45,6 @@ export default function AuthGate({ children }) {
   }
 
   if (status === "signed-in") return children;
-
-  if (status === "not-configured") {
-    return (
-      <Shell>
-        <Header />
-        <div className="flex flex-col items-center gap-2 py-4 text-center">
-          <AlertTriangle size={28} color={COLORS.warning} />
-          <p className="text-sm font-medium" style={{ color: COLORS.warning }}>
-            Falta configurar Firebase.
-          </p>
-          <p className="text-xs" style={{ color: COLORS.inkSoft }}>
-            Agrega los 6 secretos <code>VITE_FIREBASE_*</code> en GitHub → Settings → Secrets and
-            variables → Actions, y vuelve a correr el workflow de deploy.
-          </p>
-        </div>
-      </Shell>
-    );
-  }
 
   if (status === "not-authorized") {
     return (

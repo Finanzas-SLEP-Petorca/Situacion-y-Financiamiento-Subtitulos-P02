@@ -2,24 +2,21 @@ import { initializeApp, getApps } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
+/* Proyecto compartido con Calendariopermisos y Monitoreo Ingresos y Gastos SEP 2026 —
+   estos valores del SDK web no son secretos (van igual en el JS de cualquier navegador),
+   la seguridad real la dan las reglas de Firestore en /firestore.rules. */
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  apiKey: "AIzaSyBfYE16R3s3EVfn8A3dEUROJjC1vWdQ118",
+  authDomain: "slep-petorca-finanzas-permisos.firebaseapp.com",
+  projectId: "slep-petorca-finanzas-permisos",
+  storageBucket: "slep-petorca-finanzas-permisos.firebasestorage.app",
+  messagingSenderId: "1032729181983",
+  appId: "1:1032729181983:web:3a33171e171ea6adc4ba2a",
 };
 
-export const isFirebaseConfigured = Boolean(
-  firebaseConfig.apiKey && firebaseConfig.projectId && firebaseConfig.appId
-);
-
-export const app = isFirebaseConfigured
-  ? (getApps().length ? getApps()[0] : initializeApp(firebaseConfig))
-  : null;
-export const auth = isFirebaseConfigured ? getAuth(app) : null;
-export const db = isFirebaseConfigured ? getFirestore(app) : null;
+export const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export const db = getFirestore(app);
 
 /* Año del ejercicio que se está trabajando. Las colecciones de Firestore
    cuelgan de situacionDeficit/{YEAR}/... — ver doc de traspaso a Firebase. */
