@@ -16,6 +16,12 @@ export function nowStamp() {
   return d.toLocaleString("es-CL", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
 }
 export function uid() { return Date.now() + "-" + Math.random().toString(36).slice(2, 8); }
+export function fmtChileStamp(ts) {
+  const d = new Date(ts);
+  const fecha = d.toLocaleDateString("es-CL", { day: "2-digit", month: "2-digit", year: "numeric", timeZone: "America/Santiago" });
+  const hora = d.toLocaleTimeString("es-CL", { hour: "2-digit", minute: "2-digit", timeZone: "America/Santiago" });
+  return `el ${fecha} a las ${hora} (hora Chile)`;
+}
 export function computeDetalleSum(entries) {
   return (entries || []).reduce((s, e) => s + (Number(e.monto) || 0), 0);
 }

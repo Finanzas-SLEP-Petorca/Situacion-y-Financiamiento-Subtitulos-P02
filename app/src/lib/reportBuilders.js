@@ -77,7 +77,7 @@ export function buildResumenReport({ corte, monthTotals, accumulated }) {
 export function buildEstructuraReport({ estructura, estructuraCalc }) {
   const subject = `Propuesta de traspaso entre cuentas corrientes (REX) — ${estructura.periodo}`;
   const lines = [];
-  lines.push("Estimados Paulina y Javier,");
+  lines.push("Estimado Javier:");
   lines.push("");
   lines.push(`Junto con saludar, remito los antecedentes para fundamentar la Resolución Exenta (REX) de traspaso de fondos entre cuentas corrientes, correspondiente al período ${estructura.periodo}:`);
   lines.push("");
@@ -89,16 +89,6 @@ export function buildEstructuraReport({ estructura, estructuraCalc }) {
   lines.push(`- JUNJI: ${jc.diferencia >= 0 ? "saldo disponible" : "déficit"} de ${fmtCLP(Math.abs(jc.diferencia))}${estructura.junji.incluirTotal ? "" : " (no incluida en el total final)"}`);
   lines.push("");
   lines.push(`Diferencia Total Final: ${fmtCLP(estructuraCalc.diferenciaFinal)}`);
-  if (estructura.sacados.length) {
-    lines.push("");
-    lines.push("Traspasos ya registrados entre cuentas:");
-    estructura.sacados.forEach((s) => {
-      lines.push(`- ${s.fecha || "s/fecha"} — ${s.proceso || "s/proceso"}: ${s.cuentaOrigen || "?"} → ${s.cuentaDestino || "?"}, ${fmtCLP(s.monto)} (${s.rex || "sin REX"})`);
-    });
-    lines.push(`Subtotal traspasos: ${fmtCLP(estructuraCalc.sacadosSum)}`);
-  }
-  lines.push("");
-  lines.push(`Déficit acumulado total a pedir en oficio: ${fmtCLP(estructuraCalc.deficitAcumuladoAPedir)}`);
   lines.push("");
   lines.push("Quedo atento a sus comentarios para tramitar la resolución correspondiente.");
   lines.push("");
