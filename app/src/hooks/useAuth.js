@@ -7,7 +7,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { auth, db, SIGNIN_EMAIL_KEY } from "../firebase";
+import { auth, db, isFirebaseConfigured, SIGNIN_EMAIL_KEY } from "../firebase";
 
 const actionCodeSettings = {
   url: window.location.href.split("#")[0],
@@ -22,10 +22,11 @@ async function isAuthorized(email) {
 
 export function useAuth() {
   const [user, setUser] = useState(null);
-  const [status, setStatus] = useState("loading"); // loading | signed-out | link-sent | not-authorized | signed-in
+  const [status, setStatus] = useState(isFirebaseConfigured ? "loading" : "not-configured"); // loading | signed-out | link-sent | not-authorized | signed-in | not-configured
   const [error, setError] = useState("");
 
   useEffect(() => {
+    if (!isFirebaseConfigured) return;
     (async () => {
       if (isSignInWithEmailLink(auth, window.location.href)) {
         let email = window.localStorage.getItem(SIGNIN_EMAIL_KEY);
@@ -44,6 +45,7 @@ export function useAuth() {
   }, []);
 
   useEffect(() => {
+    if (!isFirebaseConfigured) return;
     return onAuthStateChanged(auth, async (u) => {
       if (!u) {
         setUser(null);
