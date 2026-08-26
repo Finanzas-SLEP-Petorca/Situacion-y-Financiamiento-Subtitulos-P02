@@ -1,5 +1,5 @@
 import * as XLSX from "xlsx";
-import { MONTHS, MONTHS_SHORT, FUENTE_DEFS } from "./calc";
+import { MONTHS, MONTHS_SHORT, FUENTE_DEFS, GRUPO_ORDER, buildEstructuraDetailRows } from "./calc";
 
 /* -------------------------------- Excel: hojas (AOA) ------------------------------ */
 /* Portado 1:1 desde reference/dashboard_deficit_slep_petorca_1.jsx */
@@ -89,7 +89,9 @@ function estructuraSheetAOA(estructura, estructuraCalc) {
   aoa.push(["Período: " + estructura.periodo]);
   aoa.push([]);
   aoa.push(["Subvención", "Ingresos", "Gasto Remuneraciones", "Gasto Subt. 22 y 29", "Total Gastos", "Diferencia", "Incluida en Total Final"]);
-  Object.values(estructuraCalc.groups).forEach((g) => {
+  GRUPO_ORDER.forEach((key) => {
+    const g = estructuraCalc.groups[key];
+    if (!g) return;
     aoa.push([g.label, g.totalIngresos, g.totalGastoRemu, g.gastoST2229, g.totalGastos, g.diferencia, g.incluirTotal ? "Sí" : "No"]);
     if (g.cd) {
       aoa.push(["  ↳ Carrera Docente", g.cdIngresos, g.cdGasto, "", "", g.cdDeficit, ""]);
@@ -106,25 +108,12 @@ function estructuraSheetAOA(estructura, estructuraCalc) {
   aoa.push([]);
   aoa.push(["Déficit acumulado total a pedir en oficio", "", "", "", "", estructuraCalc.deficitAcumuladoAPedir]);
 
-  const detailRows = [];
-  Object.entries(estructura.grupos).forEach(([key, g]) => {
-    (g.ingresosDetalle || []).forEach((e) => detailRows.push([g.label, "Ingresos", e.fecha || "", e.concepto || "", e.monto || 0]));
-    (g.gastoRemuDetalle || []).forEach((e) => detailRows.push([g.label, "Gasto Remuneraciones", e.fecha || "", e.concepto || "", e.monto || 0]));
-    (g.gastoST2229Detalle || []).forEach((e) => detailRows.push([g.label, "Gasto Subt. 22 y 29", e.fecha || "", e.concepto || "", e.monto || 0]));
-    (g.cdIngresosDetalle || []).forEach((e) => detailRows.push([`Carrera Docente — ${g.label}`, "Ingresos", e.fecha || "", e.concepto || "", e.monto || 0]));
-    (g.cdGastoDetalle || []).forEach((e) => detailRows.push([`Carrera Docente — ${g.label}`, "Gasto", e.fecha || "", e.concepto || "", e.monto || 0]));
-  });
-  (estructura.junji.gastoST2229Detalle || []).forEach((e) => detailRows.push(["JUNJI", "Gasto Subt. 22 y 29", e.fecha || "", e.concepto || "", e.monto || 0]));
-  ["operacion", "cd", "homologacion"].forEach((sub) => {
-    const label = "JUNJI " + (sub === "operacion" ? "Operación" : sub === "cd" ? "Convenio CD" : "Homologación");
-    (estructura.junji[sub].ingresosDetalle || []).forEach((e) => detailRows.push([label, "Ingresos", e.fecha || "", e.concepto || "", e.monto || 0]));
-    (estructura.junji[sub].gastoDetalle || []).forEach((e) => detailRows.push([label, "Gasto", e.fecha || "", e.concepto || "", e.monto || 0]));
-  });
+  const detailRows = buildEstructuraDetailRows(estructura);
   if (detailRows.length) {
     aoa.push([]);
     aoa.push(["Detalle de Ingresos y Gastos por subvención"]);
     aoa.push(["Subvención", "Tipo", "Fecha", "Concepto", "Monto"]);
-    detailRows.forEach((r) => aoa.push(r));
+    detailRows.forEach((e) => aoa.push([e.subvencion, e.tipo, e.fecha || "", e.concepto || "", e.monto || 0]));
   }
   return aoa;
 }
