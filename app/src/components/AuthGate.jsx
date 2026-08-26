@@ -74,7 +74,7 @@ export default function AuthGate({ children }) {
             Tu correo no está autorizado para acceder a este dashboard.
           </p>
           <p className="text-xs" style={{ color: COLORS.inkSoft }}>
-            Pide a un administrador que agregue tu correo a la lista de acceso (config/team en Firestore).
+            Pide a un administrador que agregue tu correo a la lista de acceso (ALLOWED_EMAILS en src/lib/allowedEmails.js y en las reglas de Firestore).
           </p>
           <button className="btn-secondary mt-2" onClick={logout}>Cerrar sesión</button>
         </div>

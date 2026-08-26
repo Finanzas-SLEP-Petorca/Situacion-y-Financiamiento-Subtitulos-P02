@@ -6,18 +6,16 @@ import {
   signInWithEmailLink,
   signOut,
 } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import { auth, db, isFirebaseConfigured, SIGNIN_EMAIL_KEY } from "../firebase";
+import { auth, isFirebaseConfigured, SIGNIN_EMAIL_KEY } from "../firebase";
+import { ALLOWED_EMAILS } from "../lib/allowedEmails";
 
 const actionCodeSettings = {
   url: window.location.href.split("#")[0],
   handleCodeInApp: true,
 };
 
-async function isAuthorized(email) {
-  const snap = await getDoc(doc(db, "config", "team"));
-  const emails = snap.exists() ? snap.data().emails || [] : [];
-  return emails.map((e) => e.toLowerCase()).includes(email.toLowerCase());
+function isAuthorized(email) {
+  return ALLOWED_EMAILS.map((e) => e.toLowerCase()).includes(email.toLowerCase());
 }
 
 export function useAuth() {
@@ -46,13 +44,13 @@ export function useAuth() {
 
   useEffect(() => {
     if (!isFirebaseConfigured) return;
-    return onAuthStateChanged(auth, async (u) => {
+    return onAuthStateChanged(auth, (u) => {
       if (!u) {
         setUser(null);
         setStatus("signed-out");
         return;
       }
-      const ok = await isAuthorized(u.email);
+      const ok = isAuthorized(u.email);
       if (!ok) {
         setStatus("not-authorized");
         setUser(u);

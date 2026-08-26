@@ -1,13 +1,85 @@
+// Reglas de seguridad Firestore — proyecto "slep-petorca-finanzas-permisos"
+// Para desplegar: Firebase Console → Firestore Database → Reglas → pegar este contenido →
+// Publicar. Para agregar/quitar correos: editar la lista de isAllowed() de abajo Y la
+// constante de correos autorizados en el frontend de cada app (ALLOWED_EMAILS en index.html
+// para Calendariopermisos y sep_carga_rbd; src/lib/allowedEmails.js para este panel).
+//
+// Este proyecto Firebase aloja TRES apps con colecciones independientes en la misma base de
+// datos, así que sus reglas viven juntas en un solo archivo (Firestore solo permite un
+// conjunto de reglas por base de datos):
+//   - "events"           → Calendariopermisos (github.com/Finanzas-SLEP-Petorca/Calendariopermisos)
+//   - "sep_carga_rbd"     → Monitoreo Ingresos y Gastos SEP 2026
+//   - "situacionDeficit"  → este panel (Situación de Déficit / Financiamiento Remuneraciones P02)
+// Si se edita el bloque de una colección, no tocar el bloque de las otras — y mantener este
+// archivo igual al que está publicado en Firebase Console en los tres repositorios, ya que es
+// el mismo archivo real desplegado para las tres apps.
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function isTeamMember() {
-      return request.auth != null &&
-        request.auth.token.email in
-          get(/databases/$(database)/documents/config/team).data.emails;
+
+    function isAllowed() {
+      return request.auth != null && request.auth.token.email in [
+        "wilson.rojas@sleppetorca.gob.cl",
+        "juan.bustamante@sleppetorca.gob.cl",
+        "benedicto.fessia@sleppetorca.gob.cl",
+        "sebastian.olguin@sleppetorca.gob.cl",
+        "fernando.saavedra@sleppetorca.gob.cl",
+        "yessenia.vilches@sleppetorca.gob.cl",
+        "catalina.brito@sleppetorca.gob.cl",
+        "wilson.rojasabarca@gmail.com",
+        "javier.ilabaca@sleppetorca.gob.cl",
+        "nicolas.campos@sleppetorca.gob.cl"
+      ];
     }
+
+    // --- Calendariopermisos ---
+    function validEventData() {
+      return request.resource.data.keys().hasAll(["date", "memberId", "type"])
+        && request.resource.data.date is string
+        && request.resource.data.memberId is string
+        && request.resource.data.type is string
+        && request.resource.data.type in ["feriado","permiso","licencia","compensacion","otro"];
+    }
+    match /events/{eventId} {
+      allow read:   if isAllowed();
+      allow create: if isAllowed() && validEventData();
+      allow update: if isAllowed();
+      allow delete: if isAllowed();
+    }
+
+    // --- Monitoreo Ingresos y Gastos SEP 2026 ---
+    // Un documento por RBD (id = RBD, p.ej. "1121") + un documento "_meta" con la lista
+    // compartida de ítems de gasto (items_22 / items_29). No se borran RBD desde el cliente:
+    // el panel nunca da de baja un establecimiento, solo edita sus montos.
+    match /sep_carga_rbd/{rbdId} {
+      allow read:   if isAllowed();
+      allow create, update: if isAllowed();
+      allow delete: if false;
+    }
+
+    // --- Situación de Déficit / Financiamiento Remuneraciones P02 ---
+    // Un documento por mes (situacionDeficit/{year}/months/{01-12}), un documento de detalle
+    // FAEP de enero, un documento de estructura de traspasos (+ subcolección "sacados" con el
+    // registro de movimientos entre cuentas) y una bitácora de cambios append-only.
+    match /situacionDeficit/{year}/months/{monthId} {
+      allow read, write: if isAllowed();
+    }
+    match /situacionDeficit/{year}/eneroDetalle/{docId} {
+      allow read, write: if isAllowed();
+    }
+    match /situacionDeficit/{year}/estructura/{docId} {
+      allow read, write: if isAllowed();
+    }
+    match /situacionDeficit/{year}/estructura/{docId}/sacados/{sacadoId} {
+      allow read, write: if isAllowed();
+    }
+    match /situacionDeficit/{year}/changeLog/{entryId} {
+      allow read, write: if isAllowed();
+    }
+
     match /{document=**} {
-      allow read, write: if isTeamMember();
+      allow read, write: if false;
     }
   }
 }
