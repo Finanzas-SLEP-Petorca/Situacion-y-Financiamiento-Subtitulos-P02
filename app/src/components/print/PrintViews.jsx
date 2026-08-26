@@ -211,7 +211,7 @@ export function PrintViewEstructura({ estructura, estructuraCalc }) {
         </tbody>
         <tfoot>
           <tr style={{ fontWeight: 700 }}>
-            <td style={printCellStyle} colSpan={5}>Déficit acumulado total a pedir en oficio</td>
+            <td style={printCellStyle} colSpan={5}>Déficit acumulado periodo de análisis</td>
             <td style={printCellStyleR}>{fmtCLP(estructuraCalc.deficitAcumuladoAPedir)}</td>
           </tr>
         </tfoot>

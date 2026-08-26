@@ -335,7 +335,7 @@ export default function EstructuraTab({
 
       <div className="rounded-xl p-5 mt-4 flex items-center justify-between flex-wrap gap-3" style={{ background: COLORS.navy }}>
         <div>
-          <div className="text-xs font-medium" style={{ color: "rgba(255,255,255,0.7)" }}>Déficit acumulado total a pedir en oficio</div>
+          <div className="text-xs font-medium" style={{ color: "rgba(255,255,255,0.7)" }}>Déficit acumulado periodo de análisis</div>
           <div className="text-2xl font-bold mt-1" style={{ color: "#fff", fontFamily: "var(--font-mono)" }}>{fmtCLP(estructuraCalc.deficitAcumuladoAPedir)}</div>
         </div>
         <div className="text-xs text-right" style={{ color: "rgba(255,255,255,0.75)", maxWidth: 360 }}>
