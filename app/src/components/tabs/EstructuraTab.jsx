@@ -1,7 +1,7 @@
 import { Plus, Trash2, Info } from "lucide-react";
 import { COLORS } from "../../lib/colors";
 import { fmtCLP, fmtNum, fmtPct } from "../../lib/format";
-import { GRUPO_ORDER } from "../../lib/calc";
+import { GRUPO_ORDER, APORTE_FISCAL_KEY } from "../../lib/calc";
 import { DeficitTag, TextCell, EditableCell, FieldBlock, SectionIntro, TabToolbar, AmountCell } from "../ui/Primitives";
 
 const CD_LABELS = { general: "Subvención General", sep: "SEP", pie: "PIE" };
@@ -136,7 +136,7 @@ function GrupoRow({ gkey, g, updateEstructuraGrupo, toggleIncluirTotal, onOpenDe
         <tr className="border-t" style={{ borderColor: COLORS.line, background: COLORS.mist }}>
           <td className="td-cell text-xs font-semibold pl-6" style={{ color: COLORS.navyDark }}>Total {g.label} (incl. Carrera Docente)</td>
           <td className="td-cell text-right font-mono font-semibold">{fmtNum(g.totalIngresos)}</td>
-          <td className="td-cell text-right font-mono font-semibold">{fmtNum(g.totalGastoRemu + (g.cdGasto || 0))}</td>
+          <td className="td-cell text-right font-mono font-semibold">{fmtNum(g.totalGastoRemu)}</td>
           <td className="td-cell text-right font-mono font-semibold">{fmtNum(g.gastoST2229)}</td>
           <td className="td-cell text-right font-mono font-semibold">{fmtNum(g.totalGastos)}</td>
           <td className="td-cell text-right"><DeficitTag value={g.diferencia} small /></td>
@@ -239,6 +239,25 @@ export default function EstructuraTab({
                 </tr>
               );
             })}
+            <tr className="border-t" style={{ borderColor: COLORS.line, background: COLORS.mist }}>
+              <td className="td-cell text-xs font-semibold pl-6" style={{ color: COLORS.navyDark }}>Total JUNJI</td>
+              <td className="td-cell text-right font-mono font-semibold">{fmtNum(jc.ingresos)}</td>
+              <td className="td-cell text-right font-mono font-semibold">{fmtNum(jc.gasto)}</td>
+              <td className="td-cell text-right font-mono font-semibold">{fmtNum(j.gastoST2229)}</td>
+              <td className="td-cell text-right font-mono font-semibold">{fmtNum(jc.totalGastos)}</td>
+              <td className="td-cell text-right"><DeficitTag value={jc.diferencia} small /></td>
+              <td className="td-cell"></td>
+            </tr>
+
+            {estructuraCalc.groups[APORTE_FISCAL_KEY] && (
+              <GrupoRow
+                gkey={APORTE_FISCAL_KEY}
+                g={estructuraCalc.groups[APORTE_FISCAL_KEY]}
+                updateEstructuraGrupo={updateEstructuraGrupo}
+                toggleIncluirTotal={toggleIncluirTotal}
+                onOpenDetalle={onOpenDetalle}
+              />
+            )}
           </tbody>
           <tfoot>
             <tr style={{ background: COLORS.mist }}>
@@ -246,7 +265,7 @@ export default function EstructuraTab({
               <td className="td-cell text-right font-mono font-semibold">{fmtNum(estructuraCalc.ingresosFinal)}</td>
               <td className="td-cell text-right font-mono font-semibold">{fmtNum(estructuraCalc.gastoRemuFinal)}</td>
               <td className="td-cell text-right font-mono font-semibold">{fmtNum(estructuraCalc.st2229Final)}</td>
-              <td className="td-cell text-right font-mono font-semibold">—</td>
+              <td className="td-cell text-right font-mono font-semibold">{fmtNum(estructuraCalc.gastosFinal)}</td>
               <td className="td-cell text-right"><DeficitTag value={estructuraCalc.diferenciaFinal} /></td>
               <td className="td-cell"></td>
             </tr>
@@ -254,7 +273,7 @@ export default function EstructuraTab({
         </table>
       </div>
       <p className="text-[11px] mb-4 -mt-2" style={{ color: COLORS.inkSoft }}>
-        "En total" marca qué subvenciones se suman en la Diferencia Total Final. Por defecto SEP queda fuera (como en la planilla original), ya que su déficit/superávit se autocontiene dentro de la propia subvención. Ajusta la casilla si tu criterio cambia.
+        "En total" marca qué subvenciones se suman en la fila Total Final (Ingresos, Gasto Remuneraciones, Gasto Subt. 22/29, Total Gastos y Diferencia, todas juntas). Por defecto SEP queda fuera (como en la planilla original), ya que su déficit/superávit se autocontiene dentro de la propia subvención. Ajusta la casilla si tu criterio cambia — por ejemplo, para que el Total Final sea exactamente Subvención General + SEP + PIE + JUNJI, deja esas cuatro marcadas y Aporte Fiscal sin marcar.
       </p>
 
       <CarreraDocentePanel estructura={estructura} updateCdIngresoTotal={updateCdIngresoTotal} />

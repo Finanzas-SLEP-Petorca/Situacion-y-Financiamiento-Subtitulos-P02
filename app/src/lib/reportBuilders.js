@@ -1,5 +1,5 @@
 import { fmtCLP, nowStamp } from "./format";
-import { MONTHS, MONTHS_SHORT, FUENTE_DEFS, GRUPO_ORDER } from "./calc";
+import { MONTHS, MONTHS_SHORT, FUENTE_DEFS, GRUPO_ORDER, APORTE_FISCAL_KEY } from "./calc";
 
 /* ------------------------- Reportes por correo (narrativos) ------------------------- */
 /* Portado 1:1 desde reference/dashboard_deficit_slep_petorca_1.jsx */
@@ -88,6 +88,11 @@ export function buildEstructuraReport({ estructura, estructuraCalc }) {
   });
   const jc = estructuraCalc.junjiCalc;
   lines.push(`- JUNJI: ${jc.diferencia >= 0 ? "saldo disponible" : "déficit"} de ${fmtCLP(Math.abs(jc.diferencia))}${estructura.junji.incluirTotal ? "" : " (no incluida en el total final)"}`);
+  const af = estructuraCalc.groups[APORTE_FISCAL_KEY];
+  if (af) {
+    const afEstado = af.diferencia >= 0 ? "saldo disponible" : "déficit";
+    lines.push(`- ${af.label}: ${afEstado} de ${fmtCLP(Math.abs(af.diferencia))}${af.incluirTotal ? "" : " (no incluida en el total final)"}`);
+  }
   lines.push("");
   lines.push(`Diferencia Total Final: ${fmtCLP(estructuraCalc.diferenciaFinal)}`);
   lines.push("");
