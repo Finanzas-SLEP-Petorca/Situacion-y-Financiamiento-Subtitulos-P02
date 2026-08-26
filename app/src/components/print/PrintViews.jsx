@@ -233,7 +233,10 @@ export function PrintViewEstructura({ estructura, estructuraCalc }) {
           <>
             <h2 style={{ fontSize: 13, fontWeight: 700, margin: "16px 0 6px" }}>Detalle de Ingresos y Gastos por subvención</h2>
             {groups.map((grp) => {
-              const subtotal = grp.rows.reduce((s, e) => s + (e.monto || 0), 0);
+              const ingresoRows = grp.rows.filter((e) => e.tipo.includes("Ingresos"));
+              const gastoRows = grp.rows.filter((e) => !e.tipo.includes("Ingresos"));
+              const subtotalIngresos = ingresoRows.reduce((s, e) => s + (e.monto || 0), 0);
+              const subtotalGastos = gastoRows.reduce((s, e) => s + (e.monto || 0), 0);
               return (
                 <div key={grp.subvencion} style={{ marginBottom: 10, breakInside: "avoid" }}>
                   <h3 style={{ fontSize: 11, fontWeight: 700, margin: "6px 0 3px", color: "#014F86" }}>{grp.subvencion}</h3>
@@ -246,21 +249,35 @@ export function PrintViewEstructura({ estructura, estructuraCalc }) {
                       </tr>
                     </thead>
                     <tbody>
-                      {grp.rows.map((e, i) => (
-                        <tr key={i}>
+                      {ingresoRows.map((e, i) => (
+                        <tr key={"i" + i}>
                           <td style={printCellStyle}>{e.tipo}</td>
                           <td style={printCellStyle}>{e.fecha || ""}</td>
                           <td style={printCellStyle}>{e.concepto || ""}</td>
                           <td style={printCellStyleR}>{fmtCLP(e.monto)}</td>
                         </tr>
                       ))}
+                      {ingresoRows.length > 0 && (
+                        <tr style={{ fontWeight: 700 }}>
+                          <td style={printCellStyle} colSpan={3}>Subtotal Ingresos {grp.subvencion}</td>
+                          <td style={printCellStyleR}>{fmtCLP(subtotalIngresos)}</td>
+                        </tr>
+                      )}
+                      {gastoRows.map((e, i) => (
+                        <tr key={"g" + i}>
+                          <td style={printCellStyle}>{e.tipo}</td>
+                          <td style={printCellStyle}>{e.fecha || ""}</td>
+                          <td style={printCellStyle}>{e.concepto || ""}</td>
+                          <td style={printCellStyleR}>{fmtCLP(e.monto)}</td>
+                        </tr>
+                      ))}
+                      {gastoRows.length > 0 && (
+                        <tr style={{ fontWeight: 700 }}>
+                          <td style={printCellStyle} colSpan={3}>Subtotal Gastos {grp.subvencion}</td>
+                          <td style={printCellStyleR}>{fmtCLP(subtotalGastos)}</td>
+                        </tr>
+                      )}
                     </tbody>
-                    <tfoot>
-                      <tr style={{ fontWeight: 700 }}>
-                        <td style={printCellStyle} colSpan={3}>Subtotal {grp.subvencion}</td>
-                        <td style={printCellStyleR}>{fmtCLP(subtotal)}</td>
-                      </tr>
-                    </tfoot>
                   </table>
                 </div>
               );
