@@ -136,8 +136,8 @@ function GrupoRow({ gkey, g, updateEstructuraGrupo, toggleIncluirTotal, onOpenDe
         <tr className="border-t" style={{ borderColor: COLORS.line, background: COLORS.mist }}>
           <td className="td-cell text-xs font-semibold pl-6" style={{ color: COLORS.navyDark }}>Total {g.label} (incl. Carrera Docente)</td>
           <td className="td-cell text-right font-mono font-semibold">{fmtNum(g.totalIngresos)}</td>
-          <td className="td-cell text-right text-xs" style={{ color: COLORS.inkSoft }}>—</td>
-          <td className="td-cell text-right text-xs" style={{ color: COLORS.inkSoft }}>—</td>
+          <td className="td-cell text-right font-mono font-semibold">{fmtNum(g.totalGastoRemu + (g.cdGasto || 0))}</td>
+          <td className="td-cell text-right font-mono font-semibold">{fmtNum(g.gastoST2229)}</td>
           <td className="td-cell text-right font-mono font-semibold">{fmtNum(g.totalGastos)}</td>
           <td className="td-cell text-right"><DeficitTag value={g.diferencia} small /></td>
           <td className="td-cell"></td>
@@ -234,7 +234,7 @@ export default function EstructuraTab({
                   </td>
                   <td className="td-cell text-right text-xs" style={{ color: COLORS.inkSoft }}>—</td>
                   <td className="td-cell text-right text-xs" style={{ color: COLORS.inkSoft }}>—</td>
-                  <td className="td-cell text-right font-mono text-xs">{fmtNum(j[sub].ingresos - j[sub].gasto)}</td>
+                  <td className="td-cell text-right"><DeficitTag value={j[sub].ingresos - j[sub].gasto} small /></td>
                   <td className="td-cell"></td>
                 </tr>
               );
