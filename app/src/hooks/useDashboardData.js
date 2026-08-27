@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  collection, doc, getDocs, onSnapshot, orderBy, query,
-  writeBatch, updateDoc, addDoc, deleteDoc, setDoc,
+  collection, doc, getDoc, getDocs, onSnapshot, orderBy, query,
+  writeBatch, updateDoc, addDoc, deleteDoc, setDoc, deleteField,
 } from "firebase/firestore";
 import { auth, db, YEAR } from "../firebase";
 import { MONTHS, FIELD_LABELS, computeMonthTotals, computeAccumulated, computeEstructura, FUENTE_DEFS } from "../lib/calc";
@@ -53,6 +53,46 @@ async function seedIfEmpty() {
   await sacadosBatch.commit();
 }
 
+/* Migración única: "Aporte Fiscal" pasó a dividirse en "Aporte Fiscal Educación" y
+   "Aporte Fiscal Jardines" (mismo gasto, distinto destino). Los datos ya cargados
+   bajo el campo antiguo se trasladan completos a Educación; Jardines queda en $0
+   para que se reingrese repartido. Se detecta por la ausencia del campo nuevo, así
+   que solo actúa una vez por documento. */
+async function migrateAporteFiscalSplit() {
+  const monthsSnap = await getDocs(collection(db, `${base()}/months`));
+  const batch = writeBatch(db);
+  let changed = false;
+  monthsSnap.forEach((d) => {
+    const data = d.data();
+    if (data.aporteFiscal && !data.aporteFiscalEducacion) {
+      batch.update(d.ref, {
+        aporteFiscalEducacion: data.aporteFiscal,
+        aporteFiscalJardines: { ingresos: 0, saldoSub: 0, remuneraciones: 0, obs: "" },
+        aporteFiscal: deleteField(),
+      });
+      changed = true;
+    }
+  });
+  const estSnap = await getDoc(estructuraRef());
+  if (estSnap.exists()) {
+    const data = estSnap.data();
+    const af = data.grupos?.aporteFiscal;
+    if (af && !data.grupos?.aporteFiscalEducacion) {
+      batch.update(estructuraRef(), {
+        "grupos.aporteFiscalEducacion": { ...af, label: "Aporte Fiscal Educación" },
+        "grupos.aporteFiscalJardines": {
+          label: "Aporte Fiscal Jardines", ingresos: 0, ingresosDetalle: [],
+          gastoRemu: 0, gastoRemuDetalle: [], gastoST2229: 0, gastoST2229Detalle: [],
+          cd: false, incluirTotal: true,
+        },
+        "grupos.aporteFiscal": deleteField(),
+      });
+      changed = true;
+    }
+  }
+  if (changed) await batch.commit();
+}
+
 export function useDashboardData() {
   const [months, setMonths] = useState(null);
   const [eneroDetalle, setEneroDetalle] = useState(null);
@@ -66,6 +106,7 @@ export function useDashboardData() {
     let unsub = [];
     (async () => {
       await seedIfEmpty();
+      await migrateAporteFiscalSplit();
 
       unsub.push(onSnapshot(collection(db, `${base()}/months`), (snap) => {
         const arr = new Array(12).fill(null);

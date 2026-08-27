@@ -2,22 +2,24 @@ export const MONTHS = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio",
 export const MONTHS_SHORT = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
 
 export const FUENTE_DEFS = [
-  { key: "general",      label: "Subvención General", mode: "standard" },
-  { key: "pie",           label: "PIE",                 mode: "standard" },
-  { key: "sep",           label: "SEP",                 mode: "sep" },
-  { key: "junji",         label: "JUNJI",               mode: "standard" },
-  { key: "aporteFiscal",  label: "Aporte Fiscal",       mode: "standard" },
-  { key: "faep",          label: "FAEP",                mode: "standard" },
-  { key: "mantenimiento", label: "Mantenimiento",       mode: "standard" },
-  { key: "prorretencion", label: "Prorretención",       mode: "prorretencion" },
+  { key: "general",              label: "Subvención General",       mode: "standard" },
+  { key: "pie",                   label: "PIE",                       mode: "standard" },
+  { key: "sep",                   label: "SEP",                       mode: "sep" },
+  { key: "junji",                 label: "JUNJI",                     mode: "standard" },
+  { key: "aporteFiscalEducacion", label: "Aporte Fiscal Educación",  mode: "standard" },
+  { key: "aporteFiscalJardines",  label: "Aporte Fiscal Jardines",   mode: "standard" },
+  { key: "faep",                  label: "FAEP",                     mode: "standard" },
+  { key: "mantenimiento",         label: "Mantenimiento",            mode: "standard" },
+  { key: "prorretencion",         label: "Prorretención",            mode: "prorretencion" },
 ];
 
 /* Orden fijo de subvenciones en Estructura Déficit / Traspasos — independiente del
    orden de campos que devuelva Firestore, que puede variar entre actualizaciones.
-   Aporte Fiscal no tiene fila de Carrera Docente y se muestra al final, después de
-   JUNJI (ver APORTE_FISCAL_KEY), no dentro de este orden. */
+   Aporte Fiscal (dividido en Educación y Jardines) no tiene fila de Carrera Docente
+   y se muestra al final, después de JUNJI (ver APORTE_FISCAL_ORDER), no dentro de
+   este orden. */
 export const GRUPO_ORDER = ["general", "sep", "pie"];
-export const APORTE_FISCAL_KEY = "aporteFiscal";
+export const APORTE_FISCAL_ORDER = ["aporteFiscalEducacion", "aporteFiscalJardines"];
 
 export const FIELD_LABELS = {
   ingresos: "Ingresos Totales",
@@ -189,8 +191,10 @@ export function buildEstructuraDetailRows(estructura) {
     addField("JUNJI", `${subLabel} — Gasto`, estructura.junji[sub].gasto, estructura.junji[sub].gastoDetalle);
   });
 
-  const af = estructura.grupos[APORTE_FISCAL_KEY];
-  if (af) addGroup(af.label, af);
+  APORTE_FISCAL_ORDER.forEach((key) => {
+    const g = estructura.grupos[key];
+    if (g) addGroup(g.label, g);
+  });
 
   return rows;
 }
