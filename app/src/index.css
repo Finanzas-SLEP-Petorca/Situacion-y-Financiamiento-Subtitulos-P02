@@ -61,6 +61,12 @@
   .no-print { display: none !important; }
   .only-print { display: block !important; }
   @page { size: A4 landscape; margin: 12mm; }
+  /* Evita que un título quede solo al final de una hoja mientras la tabla que le
+     sigue se va entera a la siguiente (deja un vacío grande bajo el título). */
+  .only-print h1, .only-print h2, .only-print h3 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
 }
 
 input:focus { outline: none; }
