@@ -194,3 +194,30 @@ export function buildEstructuraDetailRows(estructura) {
 
   return rows;
 }
+
+/* Agrupa las filas de buildEstructuraDetailRows por subvención, preservando el orden
+   de aparición. Usado por el PDF y el Excel para armar un bloque (con subtotales) por
+   cada subvención. */
+export function groupDetailRowsBySubvencion(detailRows) {
+  const groups = [];
+  const indexBySubvencion = {};
+  detailRows.forEach((e) => {
+    if (!(e.subvencion in indexBySubvencion)) {
+      indexBySubvencion[e.subvencion] = groups.length;
+      groups.push({ subvencion: e.subvencion, rows: [] });
+    }
+    groups[indexBySubvencion[e.subvencion]].rows.push(e);
+  });
+  return groups;
+}
+
+/* Separa las filas de un bloque de subvención en Ingresos/Gastos y calcula los
+   subtotales y la diferencia entre ambos (debe coincidir con la Diferencia del cuadro
+   principal — ver computeEstructura). Usado por el PDF y el Excel. */
+export function splitIngresosGastos(rows) {
+  const ingresoRows = rows.filter((e) => e.tipo.includes("Ingresos"));
+  const gastoRows = rows.filter((e) => !e.tipo.includes("Ingresos"));
+  const subtotalIngresos = ingresoRows.reduce((s, e) => s + (e.monto || 0), 0);
+  const subtotalGastos = gastoRows.reduce((s, e) => s + (e.monto || 0), 0);
+  return { ingresoRows, gastoRows, subtotalIngresos, subtotalGastos, diferencia: subtotalIngresos - subtotalGastos };
+}

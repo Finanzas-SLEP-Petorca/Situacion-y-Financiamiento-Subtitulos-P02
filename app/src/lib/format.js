@@ -16,6 +16,16 @@ export function nowStamp() {
   return d.toLocaleString("es-CL", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
 }
 export function uid() { return Date.now() + "-" + Math.random().toString(36).slice(2, 8); }
+/* Fecha y hora local en formato "AAAAMMDD HHmm", usada como prefijo de los archivos
+   descargados (PDF/Excel) para que el nombre indique cuándo se generó cada descarga. */
+export function fileStamp() {
+  const d = new Date();
+  const p = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())} ${p(d.getHours())}${p(d.getMinutes())}`;
+}
+export function buildFileName(title) {
+  return `${fileStamp()} - ${title}`;
+}
 export function fmtChileStamp(ts) {
   const d = new Date(ts);
   const fecha = d.toLocaleDateString("es-CL", { day: "2-digit", month: "2-digit", year: "numeric", timeZone: "America/Santiago" });
