@@ -81,6 +81,28 @@ export function TextCell({ value, onCommit, width = 200, placeholder }) {
   );
 }
 
+export function SelectCell({ value, options, onCommit, width = 200, placeholder = "Seleccionar…" }) {
+  const known = options.some((o) => o.value === value);
+  return (
+    <select
+      value={value || ""}
+      onChange={(e) => onCommit(e.target.value)}
+      style={{
+        width, fontSize: 12.5, padding: "6px 8px", borderRadius: 6,
+        border: "1px solid transparent", background: "#F3F6F8", color: value ? COLORS.ink : COLORS.inkSoft,
+        outline: "none", fontFamily: "var(--font-sans)", cursor: "pointer",
+      }}
+      className="hover:bg-white focus:bg-white focus:border-slate-300"
+    >
+      <option value="">{placeholder}</option>
+      {value && !known && <option value={value}>{value} (fuera de la lista)</option>}
+      {options.map((o) => (
+        <option key={o.value} value={o.value}>{o.label}</option>
+      ))}
+    </select>
+  );
+}
+
 export function DeficitTag({ value, small }) {
   const positive = value >= 0;
   return (

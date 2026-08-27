@@ -2,9 +2,11 @@ import { Plus, Trash2, Info } from "lucide-react";
 import { COLORS } from "../../lib/colors";
 import { fmtCLP, fmtNum, fmtPct } from "../../lib/format";
 import { GRUPO_ORDER, APORTE_FISCAL_KEY } from "../../lib/calc";
-import { DeficitTag, TextCell, EditableCell, FieldBlock, SectionIntro, TabToolbar, AmountCell } from "../ui/Primitives";
+import { CUENTAS_CORRIENTES } from "../../lib/cuentas";
+import { DeficitTag, TextCell, SelectCell, EditableCell, FieldBlock, SectionIntro, TabToolbar, AmountCell } from "../ui/Primitives";
 
 const CD_LABELS = { general: "Subvención General", sep: "SEP", pie: "PIE" };
+const CUENTA_OPTIONS = CUENTAS_CORRIENTES.map((c) => ({ value: c.alias, label: `${c.numero} — ${c.alias}` }));
 
 function CarreraDocentePanel({ estructura, updateCdIngresoTotal }) {
   const total = estructura.cdIngresoTotal || 0;
@@ -314,8 +316,8 @@ export default function EstructuraTab({
                     />
                   </td>
                   <td className="td-cell"><TextCell value={s.proceso} onCommit={(v) => updateSacado(s.id, "proceso", v)} width={170} placeholder="Ej: Remuneraciones julio" /></td>
-                  <td className="td-cell"><TextCell value={s.cuentaOrigen} onCommit={(v) => updateSacado(s.id, "cuentaOrigen", v)} width={160} placeholder="Ej: Cuenta General" /></td>
-                  <td className="td-cell"><TextCell value={s.cuentaDestino} onCommit={(v) => updateSacado(s.id, "cuentaDestino", v)} width={160} placeholder="Ej: SEP" /></td>
+                  <td className="td-cell"><SelectCell value={s.cuentaOrigen} options={CUENTA_OPTIONS} onCommit={(v) => updateSacado(s.id, "cuentaOrigen", v)} width={190} placeholder="Desde…" /></td>
+                  <td className="td-cell"><SelectCell value={s.cuentaDestino} options={CUENTA_OPTIONS} onCommit={(v) => updateSacado(s.id, "cuentaDestino", v)} width={190} placeholder="Hacia…" /></td>
                   <td className="td-cell text-right"><EditableCell value={s.monto} onCommit={(v) => updateSacado(s.id, "monto", v)} /></td>
                   <td className="td-cell"><TextCell value={s.rex} onCommit={(v) => updateSacado(s.id, "rex", v)} width={170} placeholder="Ej: REX 296 del 12/06/2026" /></td>
                   <td className="td-cell text-center">
