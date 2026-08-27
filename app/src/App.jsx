@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { LayoutGrid, FileSpreadsheet, ArrowLeftRight, ClipboardList, Loader2 } from "lucide-react";
 import { COLORS } from "./lib/colors";
-import { computeDetalleSum, fmtChileStamp } from "./lib/format";
+import { computeDetalleSum, fmtChileStamp, buildFileName } from "./lib/format";
 import { MONTHS, FIELD_LABELS } from "./lib/calc";
 import { displayName } from "./lib/teamNames";
 import { useDashboardData } from "./hooks/useDashboardData";
@@ -29,6 +29,20 @@ const TABS = [
   { key: "estructura", label: "Traspasos entre Cuentas", icon: ArrowLeftRight },
   { key: "bitacora", label: "Bitácora de Movimientos", icon: ClipboardList },
 ];
+
+/* Título sugerido por el navegador al guardar el PDF (window.print), con el mismo
+   nombre base que usan los Excel de cada pestaña (ver excelExport.js) para que ambas
+   descargas de un mismo reporte queden con el mismo nombre. */
+const ORIGINAL_TITLE = document.title;
+const printTitle = (target, { selectedMonth, corte }) => {
+  switch (target) {
+    case "datos": return `Datos ${MONTHS[selectedMonth]} - Financiamiento P02`;
+    case "resumen": return `Resumen a ${MONTHS[corte - 1]} - Financiamiento P02`;
+    case "estructura": return "Situacion deficit - Financiamiento P02";
+    case "bitacora": return "Bitacora movimientos - Financiamiento P02";
+    default: return ORIGINAL_TITLE;
+  }
+};
 
 export default function App() {
   const data = useDashboardData();
@@ -60,9 +74,11 @@ export default function App() {
 
   function handlePrint(target) {
     setPrintTarget(target);
+    document.title = buildFileName(printTitle(target, { selectedMonth, corte }));
     setTimeout(() => {
       window.print();
       setPrintTarget(null);
+      document.title = ORIGINAL_TITLE;
     }, 60);
   }
 

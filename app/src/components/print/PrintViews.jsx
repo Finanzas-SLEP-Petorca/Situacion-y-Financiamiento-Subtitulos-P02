@@ -1,5 +1,5 @@
 import { fmtCLP, fmtPct, nowStamp } from "../../lib/format";
-import { MONTHS, FUENTE_DEFS, GRUPO_ORDER, APORTE_FISCAL_KEY, buildEstructuraDetailRows } from "../../lib/calc";
+import { MONTHS, FUENTE_DEFS, GRUPO_ORDER, APORTE_FISCAL_KEY, buildEstructuraDetailRows, groupDetailRowsBySubvencion, splitIngresosGastos } from "../../lib/calc";
 
 function PrintHeader({ title, subtitle }) {
   return (
@@ -218,24 +218,12 @@ export function PrintViewEstructura({ estructura, estructuraCalc }) {
       {(() => {
         const detailRows = buildEstructuraDetailRows(estructura);
         if (!detailRows.length) return null;
-        const groups = [];
-        const indexBySubvencion = {};
-        detailRows.forEach((e) => {
-          if (!(e.subvencion in indexBySubvencion)) {
-            indexBySubvencion[e.subvencion] = groups.length;
-            groups.push({ subvencion: e.subvencion, rows: [] });
-          }
-          groups[indexBySubvencion[e.subvencion]].rows.push(e);
-        });
+        const groups = groupDetailRowsBySubvencion(detailRows);
         return (
           <>
             <h2 style={{ fontSize: 13, fontWeight: 700, margin: "16px 0 6px" }}>Detalle de Ingresos y Gastos por subvención</h2>
             {groups.map((grp) => {
-              const ingresoRows = grp.rows.filter((e) => e.tipo.includes("Ingresos"));
-              const gastoRows = grp.rows.filter((e) => !e.tipo.includes("Ingresos"));
-              const subtotalIngresos = ingresoRows.reduce((s, e) => s + (e.monto || 0), 0);
-              const subtotalGastos = gastoRows.reduce((s, e) => s + (e.monto || 0), 0);
-              const diferencia = subtotalIngresos - subtotalGastos;
+              const { ingresoRows, gastoRows, subtotalIngresos, subtotalGastos, diferencia } = splitIngresosGastos(grp.rows);
               return (
                 <div key={grp.subvencion} style={{ marginBottom: 10, breakInside: "avoid" }}>
                   <h3 style={{ fontSize: 11, fontWeight: 700, margin: "6px 0 3px", color: "#014F86" }}>{grp.subvencion}</h3>
