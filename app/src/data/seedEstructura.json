@@ -31,10 +31,18 @@
       "gastoST2229": 132291372,
       "incluirTotal": false
     },
-    "aporteFiscal": {
-      "label": "Aporte Fiscal",
+    "aporteFiscalEducacion": {
+      "label": "Aporte Fiscal Educación",
       "ingresos": 0,
       "gastoRemu": 78304926,
+      "cd": false,
+      "gastoST2229": 0,
+      "incluirTotal": true
+    },
+    "aporteFiscalJardines": {
+      "label": "Aporte Fiscal Jardines",
+      "ingresos": 0,
+      "gastoRemu": 0,
       "cd": false,
       "gastoST2229": 0,
       "incluirTotal": true

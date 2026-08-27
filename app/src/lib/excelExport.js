@@ -1,6 +1,6 @@
 import ExcelJS from "exceljs";
 import {
-  MONTHS, MONTHS_SHORT, FUENTE_DEFS, GRUPO_ORDER, APORTE_FISCAL_KEY,
+  MONTHS, MONTHS_SHORT, FUENTE_DEFS, GRUPO_ORDER, APORTE_FISCAL_ORDER,
   buildEstructuraDetailRows, groupDetailRowsBySubvencion, splitIngresosGastos,
 } from "./calc";
 import { buildFileName, nowStamp } from "./format";
@@ -210,11 +210,12 @@ function buildEstructuraSheet(ws, estructura, estructuraCalc) {
   const junjiRow = dataRow(ws, ["JUNJI", jc.ingresos, jc.gasto, estructura.junji.gastoST2229, jc.totalGastos, jc.diferencia, estructura.junji.incluirTotal ? "Sí" : "No"], 7);
   moneyCols(junjiRow, [2, 3, 4, 5, 6]);
 
-  const af = estructuraCalc.groups[APORTE_FISCAL_KEY];
-  if (af) {
+  APORTE_FISCAL_ORDER.forEach((key) => {
+    const af = estructuraCalc.groups[key];
+    if (!af) return;
     const afRow = dataRow(ws, [af.label, af.totalIngresos, af.totalGastoRemu, af.gastoST2229, af.totalGastos, af.diferencia, af.incluirTotal ? "Sí" : "No"], 7);
     moneyCols(afRow, [2, 3, 4, 5, 6]);
-  }
+  });
   blankRow(ws);
   const totalRow = dataRow(ws, ["Total Final", estructuraCalc.ingresosFinal, estructuraCalc.gastoRemuFinal, estructuraCalc.st2229Final, estructuraCalc.gastosFinal, estructuraCalc.diferenciaFinal, ""], 7, { bold: true, fill: MIST });
   moneyCols(totalRow, [2, 3, 4, 5, 6]);

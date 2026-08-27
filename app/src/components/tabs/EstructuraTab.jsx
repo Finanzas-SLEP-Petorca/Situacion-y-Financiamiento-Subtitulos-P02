@@ -1,7 +1,7 @@
 import { Plus, Trash2, Info } from "lucide-react";
 import { COLORS } from "../../lib/colors";
 import { fmtCLP, fmtNum, fmtPct } from "../../lib/format";
-import { GRUPO_ORDER, APORTE_FISCAL_KEY } from "../../lib/calc";
+import { GRUPO_ORDER, APORTE_FISCAL_ORDER } from "../../lib/calc";
 import { CUENTAS_CORRIENTES } from "../../lib/cuentas";
 import { DeficitTag, TextCell, SelectCell, EditableCell, FieldBlock, SectionIntro, TabToolbar, AmountCell } from "../ui/Primitives";
 
@@ -251,15 +251,16 @@ export default function EstructuraTab({
               <td className="td-cell"></td>
             </tr>
 
-            {estructuraCalc.groups[APORTE_FISCAL_KEY] && (
+            {APORTE_FISCAL_ORDER.filter((key) => estructuraCalc.groups[key]).map((key) => (
               <GrupoRow
-                gkey={APORTE_FISCAL_KEY}
-                g={estructuraCalc.groups[APORTE_FISCAL_KEY]}
+                key={key}
+                gkey={key}
+                g={estructuraCalc.groups[key]}
                 updateEstructuraGrupo={updateEstructuraGrupo}
                 toggleIncluirTotal={toggleIncluirTotal}
                 onOpenDetalle={onOpenDetalle}
               />
-            )}
+            ))}
           </tbody>
           <tfoot>
             <tr style={{ background: COLORS.mist }}>
@@ -275,7 +276,7 @@ export default function EstructuraTab({
         </table>
       </div>
       <p className="text-[11px] mb-4 -mt-2" style={{ color: COLORS.inkSoft }}>
-        "En total" marca qué subvenciones se suman en la fila Total Final (Ingresos, Gasto Remuneraciones, Gasto Subt. 22/29, Total Gastos y Diferencia, todas juntas). Por defecto SEP queda fuera (como en la planilla original), ya que su déficit/superávit se autocontiene dentro de la propia subvención. Ajusta la casilla si tu criterio cambia — por ejemplo, para que el Total Final sea exactamente Subvención General + SEP + PIE + JUNJI, deja esas cuatro marcadas y Aporte Fiscal sin marcar.
+        "En total" marca qué subvenciones se suman en la fila Total Final (Ingresos, Gasto Remuneraciones, Gasto Subt. 22/29, Total Gastos y Diferencia, todas juntas). Por defecto SEP queda fuera (como en la planilla original), ya que su déficit/superávit se autocontiene dentro de la propia subvención. Ajusta la casilla si tu criterio cambia — por ejemplo, para que el Total Final sea exactamente Subvención General + SEP + PIE + JUNJI, deja esas cuatro marcadas y Aporte Fiscal Educación / Jardines sin marcar.
       </p>
 
       <CarreraDocentePanel estructura={estructura} updateCdIngresoTotal={updateCdIngresoTotal} />

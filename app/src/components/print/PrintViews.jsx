@@ -1,5 +1,5 @@
 import { fmtCLP, fmtPct, nowStamp } from "../../lib/format";
-import { MONTHS, FUENTE_DEFS, GRUPO_ORDER, APORTE_FISCAL_KEY, buildEstructuraDetailRows, groupDetailRowsBySubvencion, splitIngresosGastos } from "../../lib/calc";
+import { MONTHS, FUENTE_DEFS, GRUPO_ORDER, APORTE_FISCAL_ORDER, buildEstructuraDetailRows, groupDetailRowsBySubvencion, splitIngresosGastos } from "../../lib/calc";
 
 function PrintHeader({ title, subtitle }) {
   return (
@@ -169,14 +169,14 @@ export function PrintViewEstructura({ estructura, estructuraCalc }) {
             <td style={printCellStyleR}>{fmtCLP(estructuraCalc.junjiCalc.totalGastos)}</td>
             <td style={printCellStyleR}>{fmtCLP(estructuraCalc.junjiCalc.diferencia)}</td>
           </tr>
-          {estructuraCalc.groups[APORTE_FISCAL_KEY] && (
-            <tr>
-              <td style={printCellStyle}>{estructuraCalc.groups[APORTE_FISCAL_KEY].label}</td>
-              <td style={printCellStyleR}>{fmtCLP(estructuraCalc.groups[APORTE_FISCAL_KEY].totalIngresos)}</td>
-              <td style={printCellStyleR}>{fmtCLP(estructuraCalc.groups[APORTE_FISCAL_KEY].totalGastos)}</td>
-              <td style={printCellStyleR}>{fmtCLP(estructuraCalc.groups[APORTE_FISCAL_KEY].diferencia)}</td>
+          {APORTE_FISCAL_ORDER.map((key) => estructuraCalc.groups[key]).filter(Boolean).map((g) => (
+            <tr key={g.label}>
+              <td style={printCellStyle}>{g.label}</td>
+              <td style={printCellStyleR}>{fmtCLP(g.totalIngresos)}</td>
+              <td style={printCellStyleR}>{fmtCLP(g.totalGastos)}</td>
+              <td style={printCellStyleR}>{fmtCLP(g.diferencia)}</td>
             </tr>
-          )}
+          ))}
         </tbody>
         <tfoot>
           <tr style={{ fontWeight: 700 }}>
