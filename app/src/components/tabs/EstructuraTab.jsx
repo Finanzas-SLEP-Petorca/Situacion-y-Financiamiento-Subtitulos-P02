@@ -6,7 +6,7 @@ import { CUENTAS_CORRIENTES } from "../../lib/cuentas";
 import { DeficitTag, TextCell, SelectCell, EditableCell, FieldBlock, SectionIntro, TabToolbar, AmountCell } from "../ui/Primitives";
 
 const CD_LABELS = { general: "Subvención General", sep: "SEP", pie: "PIE" };
-const CUENTA_OPTIONS = CUENTAS_CORRIENTES.map((c) => ({ value: c.alias, label: `${c.numero} — ${c.alias}` }));
+const CUENTA_OPTIONS = CUENTAS_CORRIENTES.map((c) => ({ value: c.alias, label: c.alias }));
 
 function CarreraDocentePanel({ estructura, updateCdIngresoTotal }) {
   const total = estructura.cdIngresoTotal || 0;
@@ -292,15 +292,15 @@ export default function EstructuraTab({
           <button className="btn-secondary shrink-0" onClick={addSacado}><Plus size={13} /> Agregar traspaso</button>
         </div>
         <div className="overflow-x-auto rounded-xl border" style={{ borderColor: COLORS.line }}>
-          <table className="w-full text-sm border-collapse" style={{ minWidth: 880 }}>
+          <table className="w-full text-sm border-collapse" style={{ minWidth: 1320 }}>
             <thead>
               <tr style={{ background: COLORS.mist }}>
                 <th className="th-cell text-left" style={{ width: 130 }}>Fecha</th>
-                <th className="th-cell text-left">Proceso / Motivo</th>
-                <th className="th-cell text-left">Cuenta Origen (Desde)</th>
-                <th className="th-cell text-left">Cuenta Destino (Hacia)</th>
+                <th className="th-cell text-left" style={{ width: 240 }}>Proceso / Motivo</th>
+                <th className="th-cell text-left" style={{ width: 280 }}>Cuenta Origen (Desde)</th>
+                <th className="th-cell text-left" style={{ width: 280 }}>Cuenta Destino (Hacia)</th>
                 <th className="th-cell text-right">Monto</th>
-                <th className="th-cell text-left">N° REX</th>
+                <th className="th-cell text-left" style={{ width: 220 }}>N° REX</th>
                 <th className="th-cell"></th>
               </tr>
             </thead>
@@ -316,11 +316,11 @@ export default function EstructuraTab({
                       style={{ borderColor: COLORS.line, fontFamily: "var(--font-sans)", color: COLORS.ink }}
                     />
                   </td>
-                  <td className="td-cell"><TextCell value={s.proceso} onCommit={(v) => updateSacado(s.id, "proceso", v)} width={170} placeholder="Ej: Remuneraciones julio" /></td>
-                  <td className="td-cell"><SelectCell value={s.cuentaOrigen} options={CUENTA_OPTIONS} onCommit={(v) => updateSacado(s.id, "cuentaOrigen", v)} width={190} placeholder="Desde…" /></td>
-                  <td className="td-cell"><SelectCell value={s.cuentaDestino} options={CUENTA_OPTIONS} onCommit={(v) => updateSacado(s.id, "cuentaDestino", v)} width={190} placeholder="Hacia…" /></td>
+                  <td className="td-cell"><TextCell value={s.proceso} onCommit={(v) => updateSacado(s.id, "proceso", v)} width={230} placeholder="Ej: Remuneraciones julio" /></td>
+                  <td className="td-cell"><SelectCell value={s.cuentaOrigen} options={CUENTA_OPTIONS} onCommit={(v) => updateSacado(s.id, "cuentaOrigen", v)} width={270} placeholder="Desde…" /></td>
+                  <td className="td-cell"><SelectCell value={s.cuentaDestino} options={CUENTA_OPTIONS} onCommit={(v) => updateSacado(s.id, "cuentaDestino", v)} width={270} placeholder="Hacia…" /></td>
                   <td className="td-cell text-right"><EditableCell value={s.monto} onCommit={(v) => updateSacado(s.id, "monto", v)} /></td>
-                  <td className="td-cell"><TextCell value={s.rex} onCommit={(v) => updateSacado(s.id, "rex", v)} width={170} placeholder="Ej: REX 296 del 12/06/2026" /></td>
+                  <td className="td-cell"><TextCell value={s.rex} onCommit={(v) => updateSacado(s.id, "rex", v)} width={210} placeholder="Ej: REX 296 del 12/06/2026" /></td>
                   <td className="td-cell text-center">
                     <button onClick={() => removeSacado(s.id)} style={{ color: COLORS.danger }} title="Eliminar">
                       <Trash2 size={14} />
