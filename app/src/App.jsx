@@ -13,12 +13,12 @@ import EstructuraTab from "./components/tabs/EstructuraTab";
 import BitacoraTab from "./components/tabs/BitacoraTab";
 import DetalleModal from "./components/DetalleModal";
 import ReportModal from "./components/ReportModal";
-import { PrintViewDatos, PrintViewResumen, PrintViewEstructura, PrintViewBitacora } from "./components/print/PrintViews";
+import { PrintViewDatos, PrintViewResumen, PrintViewEstructura, PrintViewBitacora, PrintViewRex } from "./components/print/PrintViews";
 import {
   buildDatosMensualReport, buildResumenReport, buildEstructuraReport, buildBitacoraReport,
 } from "./lib/reportBuilders";
 import {
-  exportDatosMensualExcel, exportResumenExcel, exportEstructuraExcel, exportBitacoraExcel,
+  exportDatosMensualExcel, exportResumenExcel, exportEstructuraExcel, exportBitacoraExcel, exportRexExcel,
 } from "./lib/excelExport";
 
 const LOGO_SRC = import.meta.env.BASE_URL + "logo-slep-icon.png";
@@ -40,6 +40,7 @@ const printTitle = (target, { selectedMonth, corte }) => {
     case "resumen": return `Resumen a ${MONTHS[corte - 1]} - Financiamiento P02`;
     case "estructura": return "Situacion deficit - Financiamiento P02";
     case "bitacora": return "Bitacora movimientos - Financiamiento P02";
+    case "rex": return "Registro traspasos REX - Financiamiento P02";
     default: return ORIGINAL_TITLE;
   }
 };
@@ -125,6 +126,9 @@ export default function App() {
       )}
       {printTarget === "bitacora" && (
         <PrintViewBitacora changeLog={changeLog} />
+      )}
+      {printTarget === "rex" && (
+        <PrintViewRex estructura={estructura} estructuraCalc={estructuraCalc} />
       )}
 
       <div className="no-print">
@@ -240,6 +244,8 @@ export default function App() {
               onExcel={() => exportEstructuraExcel(estructura, estructuraCalc)}
               onPDF={() => handlePrint("estructura")}
               onReport={openEstructuraReport}
+              onExcelRex={() => exportRexExcel(estructura, estructuraCalc)}
+              onPDFRex={() => handlePrint("rex")}
               onOpenDetalle={openDetalleEstructura}
             />
           )}
