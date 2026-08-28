@@ -6,6 +6,7 @@ import {
 import { auth, db, YEAR } from "../firebase";
 import { MONTHS, FIELD_LABELS, computeMonthTotals, computeAccumulated, computeEstructura, FUENTE_DEFS } from "../lib/calc";
 import { computeDetalleSum, nowStamp, uid } from "../lib/format";
+import { CUENTAS_CORRIENTES } from "../lib/cuentas";
 import seedMonths from "../data/seedMonths.json";
 import seedEneroDetalle from "../data/seedEneroDetalle.json";
 import seedEstructura from "../data/seedEstructura.json";
@@ -93,6 +94,30 @@ async function migrateAporteFiscalSplit() {
   if (changed) await batch.commit();
 }
 
+/* Migración única: el desplegable de cuentas de Desde/Hacia en el Registro de
+   traspasos (REX) pasó a guardar "N° de cuenta — nombre" en vez de solo el nombre,
+   para que el N° de cuenta aparezca en el reporte. Los traspasos ya cargados con
+   el nombre exacto de una cuenta del catálogo (sin número) se completan aquí; si
+   el texto no calza exactamente con ninguna cuenta (texto libre antiguo), se deja
+   tal cual para no inventar un número. */
+async function migrateCuentaNumeros() {
+  const aliasToFull = new Map(CUENTAS_CORRIENTES.map((c) => [c.alias, `${c.numero} — ${c.alias}`]));
+  const sacadosSnap = await getDocs(sacadosCol());
+  const batch = writeBatch(db);
+  let changed = false;
+  sacadosSnap.forEach((d) => {
+    const data = d.data();
+    const patch = {};
+    if (data.cuentaOrigen && aliasToFull.has(data.cuentaOrigen)) patch.cuentaOrigen = aliasToFull.get(data.cuentaOrigen);
+    if (data.cuentaDestino && aliasToFull.has(data.cuentaDestino)) patch.cuentaDestino = aliasToFull.get(data.cuentaDestino);
+    if (Object.keys(patch).length) {
+      batch.update(d.ref, patch);
+      changed = true;
+    }
+  });
+  if (changed) await batch.commit();
+}
+
 export function useDashboardData() {
   const [months, setMonths] = useState(null);
   const [eneroDetalle, setEneroDetalle] = useState(null);
@@ -107,6 +132,7 @@ export function useDashboardData() {
     (async () => {
       await seedIfEmpty();
       await migrateAporteFiscalSplit();
+      await migrateCuentaNumeros();
 
       unsub.push(onSnapshot(collection(db, `${base()}/months`), (snap) => {
         const arr = new Array(12).fill(null);
