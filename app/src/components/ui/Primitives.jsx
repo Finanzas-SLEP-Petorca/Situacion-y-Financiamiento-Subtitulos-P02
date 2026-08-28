@@ -83,12 +83,11 @@ export function TextCell({ value, onCommit, width = 200, placeholder }) {
 
 export function SelectCell({ value, options, onCommit, width = 200, placeholder = "Seleccionar…" }) {
   const known = options.some((o) => o.value === value);
-  const selectedLabel = options.find((o) => o.value === value)?.label || value || "";
   return (
     <select
       value={value || ""}
       onChange={(e) => onCommit(e.target.value)}
-      title={selectedLabel}
+      title={value || ""}
       style={{
         width, maxWidth: "100%", fontSize: 12.5, padding: "6px 8px", borderRadius: 6,
         border: "1px solid transparent", background: "#F3F6F8", color: value ? COLORS.ink : COLORS.inkSoft,

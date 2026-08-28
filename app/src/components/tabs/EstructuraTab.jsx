@@ -6,7 +6,10 @@ import { CUENTAS_CORRIENTES } from "../../lib/cuentas";
 import { DeficitTag, TextCell, SelectCell, EditableCell, FieldBlock, SectionIntro, TabToolbar, AmountCell } from "../ui/Primitives";
 
 const CD_LABELS = { general: "Subvención General", sep: "SEP", pie: "PIE" };
-const CUENTA_OPTIONS = CUENTAS_CORRIENTES.map((c) => ({ value: c.alias, label: c.alias }));
+/* El valor guardado (y el que aparece en el reporte REX) incluye el N° de cuenta —
+   es importante para el reporte —, mientras que el desplegable solo muestra el
+   nombre para que se lea completo y sin cortes. */
+const CUENTA_OPTIONS = CUENTAS_CORRIENTES.map((c) => ({ value: `${c.numero} — ${c.alias}`, label: c.alias }));
 
 function CarreraDocentePanel({ estructura, updateCdIngresoTotal }) {
   const total = estructura.cdIngresoTotal || 0;
