@@ -6,10 +6,10 @@ import { CUENTAS_CORRIENTES } from "../../lib/cuentas";
 import { DeficitTag, TextCell, SelectCell, EditableCell, FieldBlock, SectionIntro, TabToolbar, AmountCell } from "../ui/Primitives";
 
 const CD_LABELS = { general: "Subvención General", sep: "SEP", pie: "PIE" };
-/* El valor guardado (y el que aparece en el reporte REX) incluye el N° de cuenta —
-   es importante para el reporte —, mientras que el desplegable solo muestra el
-   nombre para que se lea completo y sin cortes. */
-const CUENTA_OPTIONS = CUENTAS_CORRIENTES.map((c) => ({ value: `${c.numero} — ${c.alias}`, label: c.alias }));
+/* El N° de cuenta es importante tanto en el reporte como en el propio Registro en
+   pantalla, así que el desplegable muestra "N° — nombre" igual a como queda
+   guardado. */
+const CUENTA_OPTIONS = CUENTAS_CORRIENTES.map((c) => ({ value: `${c.numero} — ${c.alias}`, label: `${c.numero} — ${c.alias}` }));
 
 function CarreraDocentePanel({ estructura, updateCdIngresoTotal }) {
   const total = estructura.cdIngresoTotal || 0;
@@ -295,15 +295,15 @@ export default function EstructuraTab({
           <button className="btn-secondary shrink-0" onClick={addSacado}><Plus size={13} /> Agregar traspaso</button>
         </div>
         <div className="overflow-x-auto rounded-xl border" style={{ borderColor: COLORS.line }}>
-          <table className="w-full text-sm border-collapse" style={{ minWidth: 1320 }}>
+          <table className="w-full text-sm border-collapse" style={{ minWidth: 1500 }}>
             <thead>
               <tr style={{ background: COLORS.mist }}>
                 <th className="th-cell text-left" style={{ width: 130 }}>Fecha</th>
-                <th className="th-cell text-left" style={{ width: 240 }}>Proceso / Motivo</th>
-                <th className="th-cell text-left" style={{ width: 280 }}>Cuenta Origen (Desde)</th>
-                <th className="th-cell text-left" style={{ width: 280 }}>Cuenta Destino (Hacia)</th>
+                <th className="th-cell text-left" style={{ width: 220 }}>Proceso / Motivo</th>
+                <th className="th-cell text-left" style={{ width: 340 }}>Cuenta Origen (Desde)</th>
+                <th className="th-cell text-left" style={{ width: 340 }}>Cuenta Destino (Hacia)</th>
                 <th className="th-cell text-right">Monto</th>
-                <th className="th-cell text-left" style={{ width: 220 }}>N° REX</th>
+                <th className="th-cell text-left" style={{ width: 200 }}>N° REX</th>
                 <th className="th-cell"></th>
               </tr>
             </thead>
@@ -319,9 +319,9 @@ export default function EstructuraTab({
                       style={{ borderColor: COLORS.line, fontFamily: "var(--font-sans)", color: COLORS.ink }}
                     />
                   </td>
-                  <td className="td-cell"><TextCell value={s.proceso} onCommit={(v) => updateSacado(s.id, "proceso", v)} width={230} placeholder="Ej: Remuneraciones julio" /></td>
-                  <td className="td-cell"><SelectCell value={s.cuentaOrigen} options={CUENTA_OPTIONS} onCommit={(v) => updateSacado(s.id, "cuentaOrigen", v)} width={270} placeholder="Desde…" /></td>
-                  <td className="td-cell"><SelectCell value={s.cuentaDestino} options={CUENTA_OPTIONS} onCommit={(v) => updateSacado(s.id, "cuentaDestino", v)} width={270} placeholder="Hacia…" /></td>
+                  <td className="td-cell"><TextCell value={s.proceso} onCommit={(v) => updateSacado(s.id, "proceso", v)} width={210} placeholder="Ej: Remuneraciones julio" /></td>
+                  <td className="td-cell"><SelectCell value={s.cuentaOrigen} options={CUENTA_OPTIONS} onCommit={(v) => updateSacado(s.id, "cuentaOrigen", v)} width={330} placeholder="Desde…" /></td>
+                  <td className="td-cell"><SelectCell value={s.cuentaDestino} options={CUENTA_OPTIONS} onCommit={(v) => updateSacado(s.id, "cuentaDestino", v)} width={330} placeholder="Hacia…" /></td>
                   <td className="td-cell text-right"><EditableCell value={s.monto} onCommit={(v) => updateSacado(s.id, "monto", v)} /></td>
                   <td className="td-cell"><TextCell value={s.rex} onCommit={(v) => updateSacado(s.id, "rex", v)} width={210} placeholder="Ej: REX 296 del 12/06/2026" /></td>
                   <td className="td-cell text-center">
