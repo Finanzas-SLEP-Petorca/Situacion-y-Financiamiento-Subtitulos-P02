@@ -1,4 +1,4 @@
-import { Plus, Trash2, Info } from "lucide-react";
+import { Plus, Trash2, Info, Download, Printer } from "lucide-react";
 import { COLORS } from "../../lib/colors";
 import { fmtCLP, fmtNum, fmtPct } from "../../lib/format";
 import { GRUPO_ORDER, APORTE_FISCAL_ORDER } from "../../lib/calc";
@@ -155,7 +155,7 @@ function GrupoRow({ gkey, g, updateEstructuraGrupo, toggleIncluirTotal, onOpenDe
 export default function EstructuraTab({
   estructura, estructuraCalc, updatePeriodo, updateEstructuraGrupo, updateCdIngresoTotal, updateEstructuraJunji,
   toggleIncluirTotal, addSacado, updateSacado, removeSacado,
-  onExcel, onPDF, onReport, onOpenDetalle,
+  onExcel, onPDF, onReport, onExcelRex, onPDFRex, onOpenDetalle,
 }) {
   const j = estructura.junji;
   const jc = estructuraCalc.junjiCalc;
@@ -292,7 +292,15 @@ export default function EstructuraTab({
               Cada fila es un movimiento real: de qué cuenta salió, a cuál entró, para qué proceso (remuneraciones, pago a proveedores, etc.) y bajo qué resolución. El monto usa signo manual: negativo si ese movimiento ya redujo lo que falta pedir, positivo si lo aumentó.
             </p>
           </div>
-          <button className="btn-secondary shrink-0" onClick={addSacado}><Plus size={13} /> Agregar traspaso</button>
+          <div className="flex items-center gap-2 shrink-0 flex-wrap">
+            <button className="btn-secondary" onClick={onExcelRex} title="Exportar Excel solo del Registro de traspasos (REX)">
+              <Download size={13} /> Excel REX
+            </button>
+            <button className="btn-secondary" onClick={onPDFRex} title="Exportar PDF solo del Registro de traspasos (REX)">
+              <Printer size={13} /> PDF REX
+            </button>
+            <button className="btn-secondary" onClick={addSacado}><Plus size={13} /> Agregar traspaso</button>
+          </div>
         </div>
         <div className="overflow-x-auto rounded-xl border" style={{ borderColor: COLORS.line }}>
           <table className="w-full text-sm border-collapse" style={{ minWidth: 1500 }}>

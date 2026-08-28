@@ -283,6 +283,29 @@ function buildBitacoraSheet(ws, changeLog) {
   });
 }
 
+/* -------------------------------- Excel: hoja REX (solo traspasos) ------------------------------ */
+
+function buildRexSheet(ws, estructura, estructuraCalc) {
+  setWidths(ws, [14, 28, 34, 34, 16, 22]);
+  titleRow(ws, "Registro de traspasos entre cuentas (REX)", 6);
+  subtitleRow(ws, `SLEP Petorca · Período: ${estructura.periodo} · Generado ${nowStamp()}`, 6);
+  blankRow(ws);
+  headerRow(ws, ["Fecha", "Proceso / Motivo", "Cuenta Origen (Desde)", "Cuenta Destino (Hacia)", "Monto", "N° REX"]);
+  estructura.sacados.forEach((s) => {
+    const row = dataRow(ws, [s.fecha || "", s.proceso || "", s.cuentaOrigen || "", s.cuentaDestino || "", s.monto, s.rex || ""], 6);
+    moneyCols(row, [5]);
+  });
+  blankRow(ws);
+  const rexSumRow = ws.addRow(["Subtotal traspasos registrados (REX)", "", "", "", "", estructuraCalc.sacadosSum]);
+  ws.mergeCells(rexSumRow.number, 1, rexSumRow.number, 5);
+  for (let i = 1; i <= 6; i++) {
+    rexSumRow.getCell(i).border = BOX;
+    rexSumRow.getCell(i).font = { bold: true };
+    rexSumRow.getCell(i).fill = { type: "pattern", pattern: "solid", fgColor: { argb: MIST } };
+  }
+  rexSumRow.getCell(6).numFmt = MONEY_FMT;
+}
+
 /* -------------------------------- Excel: exportación independiente por pestaña ------------------------------ */
 
 export async function exportDatosMensualExcel(monthIdx, monthData, monthTotal) {
@@ -311,4 +334,11 @@ export async function exportBitacoraExcel(changeLog) {
   const ws = wb.addWorksheet("Bitacora");
   buildBitacoraSheet(ws, changeLog);
   await downloadWorkbook(wb, buildFileName("Bitacora movimientos - Financiamiento P02") + ".xlsx");
+}
+
+export async function exportRexExcel(estructura, estructuraCalc) {
+  const wb = new ExcelJS.Workbook();
+  const ws = wb.addWorksheet("Registro REX");
+  buildRexSheet(ws, estructura, estructuraCalc);
+  await downloadWorkbook(wb, buildFileName("Registro traspasos REX - Financiamiento P02") + ".xlsx");
 }
