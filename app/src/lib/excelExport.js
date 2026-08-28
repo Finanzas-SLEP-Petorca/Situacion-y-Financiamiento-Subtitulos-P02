@@ -221,23 +221,6 @@ function buildEstructuraSheet(ws, estructura, estructuraCalc) {
   moneyCols(totalRow, [2, 3, 4, 5, 6]);
   blankRow(ws);
 
-  sectionRow(ws, "Registro de traspasos entre cuentas (REX)", 7);
-  const rexHead = headerRow(ws, ["Fecha", "Proceso / Motivo", "Cuenta Origen (Desde)", "Cuenta Destino (Hacia)", "Monto", "N° REX"]);
-  rexHead.getCell(7).fill = null;
-  estructura.sacados.forEach((s) => {
-    const row = dataRow(ws, [s.fecha || "", s.proceso || "", s.cuentaOrigen || "", s.cuentaDestino || "", s.monto, s.rex || ""], 6);
-    moneyCols(row, [5]);
-  });
-  blankRow(ws);
-  const rexSumRow = ws.addRow(["Subtotal traspasos registrados (REX)", "", "", "", "", estructuraCalc.sacadosSum]);
-  ws.mergeCells(rexSumRow.number, 1, rexSumRow.number, 5);
-  for (let i = 1; i <= 6; i++) {
-    rexSumRow.getCell(i).border = BOX;
-    rexSumRow.getCell(i).font = { bold: true };
-    rexSumRow.getCell(i).fill = { type: "pattern", pattern: "solid", fgColor: { argb: MIST } };
-  }
-  rexSumRow.getCell(6).numFmt = MONEY_FMT;
-
   const detailRows = buildEstructuraDetailRows(estructura);
   if (detailRows.length) {
     blankRow(ws);

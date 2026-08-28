@@ -188,33 +188,6 @@ export function PrintViewEstructura({ estructura, estructuraCalc }) {
         </tfoot>
       </table>
 
-      <h2 style={{ fontSize: 13, fontWeight: 700, margin: "16px 0 6px" }}>Registro de traspasos entre cuentas (REX)</h2>
-      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 10 }}>
-        <thead>
-          <tr>
-            {["Fecha", "Proceso / Motivo", "Desde", "Hacia", "Monto", "N° REX"].map((h) => (
-              <th key={h} style={{ ...printHeadStyle, textAlign: h === "Monto" ? "right" : "left" }}>{h}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {estructura.sacados.map((s) => (
-            <tr key={s.id}>
-              <td style={printCellStyle}>{s.fecha || ""}</td>
-              <td style={printCellStyle}>{s.proceso || ""}</td>
-              <td style={printCellStyle}>{s.cuentaOrigen || ""}</td>
-              <td style={printCellStyle}>{s.cuentaDestino || ""}</td>
-              <td style={printCellStyleR}>{fmtCLP(s.monto)}</td>
-              <td style={printCellStyle}>{s.rex || ""}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 6, padding: "6px 8px", border: "1px solid #999", fontSize: 11, fontWeight: 700 }}>
-        <span>Subtotal traspasos registrados (REX)</span>
-        <span>{fmtCLP(estructuraCalc.sacadosSum)}</span>
-      </div>
-
       {(() => {
         const detailRows = buildEstructuraDetailRows(estructura);
         if (!detailRows.length) return null;
