@@ -211,8 +211,8 @@ export function PrintViewEstructura({ estructura, estructuraCalc }) {
         </tbody>
       </table>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 6, padding: "6px 8px", border: "1px solid #999", fontSize: 11, fontWeight: 700 }}>
-        <span>Déficit acumulado periodo de análisis</span>
-        <span>{fmtCLP(estructuraCalc.deficitAcumuladoAPedir)}</span>
+        <span>Subtotal traspasos registrados (REX)</span>
+        <span>{fmtCLP(estructuraCalc.sacadosSum)}</span>
       </div>
 
       {(() => {

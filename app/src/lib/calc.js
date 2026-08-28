@@ -135,9 +135,8 @@ export function computeEstructura(estructura) {
   }
 
   const sacadosSum = (estructura.sacados || []).reduce((s, r) => s + (r.monto || 0), 0);
-  const deficitAcumuladoAPedir = diferenciaFinal + sacadosSum;
 
-  return { groups, junjiCalc, ingresosFinal, gastoRemuFinal, st2229Final, gastosFinal, diferenciaFinal, sacadosSum, deficitAcumuladoAPedir };
+  return { groups, junjiCalc, ingresosFinal, gastoRemuFinal, st2229Final, gastosFinal, diferenciaFinal, sacadosSum };
 }
 
 const JUNJI_SUB_LABELS = { operacion: "Operación", cd: "Convenio CD", homologacion: "Homologación" };

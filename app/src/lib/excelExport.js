@@ -229,14 +229,14 @@ function buildEstructuraSheet(ws, estructura, estructuraCalc) {
     moneyCols(row, [5]);
   });
   blankRow(ws);
-  const deficitRow = ws.addRow(["Déficit acumulado periodo de análisis", "", "", "", "", estructuraCalc.deficitAcumuladoAPedir]);
-  ws.mergeCells(deficitRow.number, 1, deficitRow.number, 5);
+  const rexSumRow = ws.addRow(["Subtotal traspasos registrados (REX)", "", "", "", "", estructuraCalc.sacadosSum]);
+  ws.mergeCells(rexSumRow.number, 1, rexSumRow.number, 5);
   for (let i = 1; i <= 6; i++) {
-    deficitRow.getCell(i).border = BOX;
-    deficitRow.getCell(i).font = { bold: true };
-    deficitRow.getCell(i).fill = { type: "pattern", pattern: "solid", fgColor: { argb: MIST } };
+    rexSumRow.getCell(i).border = BOX;
+    rexSumRow.getCell(i).font = { bold: true };
+    rexSumRow.getCell(i).fill = { type: "pattern", pattern: "solid", fgColor: { argb: MIST } };
   }
-  deficitRow.getCell(6).numFmt = MONEY_FMT;
+  rexSumRow.getCell(6).numFmt = MONEY_FMT;
 
   const detailRows = buildEstructuraDetailRows(estructura);
   if (detailRows.length) {
