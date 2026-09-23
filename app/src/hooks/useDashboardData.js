@@ -125,28 +125,40 @@ export function useDashboardData() {
   const [sacados, setSacados] = useState(null);
   const [changeLog, setChangeLog] = useState(null);
   const [saveStatus, setSaveStatus] = useState("idle");
+  const [loadError, setLoadError] = useState(null);
   const pending = useRef(0);
 
   useEffect(() => {
     let unsub = [];
     (async () => {
-      await seedIfEmpty();
-      await migrateAporteFiscalSplit();
-      await migrateCuentaNumeros();
+      try {
+        await seedIfEmpty();
+        await migrateAporteFiscalSplit();
+        await migrateCuentaNumeros();
+      } catch (err) {
+        console.error("Error preparando datos iniciales:", err);
+        setLoadError(err?.message || String(err));
+        return;
+      }
+
+      const onLoadError = (err) => {
+        console.error("Error cargando datos de Firestore:", err);
+        setLoadError(err?.message || String(err));
+      };
 
       unsub.push(onSnapshot(collection(db, `${base()}/months`), (snap) => {
         const arr = new Array(12).fill(null);
         snap.forEach((d) => { arr[Number(d.id) - 1] = d.data(); });
         setMonths(arr);
-      }));
-      unsub.push(onSnapshot(eneroRef(), (snap) => setEneroDetalle(snap.data() || {})));
-      unsub.push(onSnapshot(estructuraRef(), (snap) => setEstructuraBase(snap.data() || {})));
+      }, onLoadError));
+      unsub.push(onSnapshot(eneroRef(), (snap) => setEneroDetalle(snap.data() || {}), onLoadError));
+      unsub.push(onSnapshot(estructuraRef(), (snap) => setEstructuraBase(snap.data() || {}), onLoadError));
       unsub.push(onSnapshot(sacadosCol(), (snap) => {
         setSacados(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
-      }));
+      }, onLoadError));
       unsub.push(onSnapshot(query(changeLogCol(), orderBy("ts", "desc")), (snap) => {
         setChangeLog(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
-      }));
+      }, onLoadError));
     })();
     return () => unsub.forEach((u) => u());
   }, []);
@@ -383,7 +395,7 @@ export function useDashboardData() {
   }, [changeLog, withSaving]);
 
   return {
-    loaded, saveStatus,
+    loaded, saveStatus, loadError,
     months, eneroDetalle, estructura, changeLog,
     monthTotals, accumulated, estructuraCalc,
     updateFuenteField, updateFuenteObs,
