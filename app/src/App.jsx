@@ -83,6 +83,18 @@ export default function App() {
     }, 60);
   }
 
+  if (data.loadError) {
+    return (
+      <div className="flex items-center justify-center min-h-screen px-4" style={{ background: COLORS.paper }}>
+        <div className="max-w-md text-center text-sm" style={{ color: COLORS.danger }}>
+          <p className="font-semibold mb-2">No se pudieron cargar los datos.</p>
+          <p className="mb-4" style={{ color: COLORS.inkSoft }}>{data.loadError}</p>
+          <button className="btn-secondary" onClick={() => window.location.reload()}>Reintentar</button>
+        </div>
+      </div>
+    );
+  }
+
   if (!data.loaded) {
     return (
       <div className="flex items-center justify-center min-h-screen gap-2 text-sm" style={{ color: COLORS.inkSoft, background: COLORS.paper }}>
