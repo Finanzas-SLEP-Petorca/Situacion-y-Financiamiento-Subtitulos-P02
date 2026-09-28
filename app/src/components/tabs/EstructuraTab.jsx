@@ -1,5 +1,5 @@
 import { Plus, Trash2, Info, Download, Printer } from "lucide-react";
-import { COLORS } from "../../lib/colors";
+import { COLORS, GRADIENTS } from "../../lib/colors";
 import { fmtCLP, fmtNum, fmtPct } from "../../lib/format";
 import { GRUPO_ORDER, APORTE_FISCAL_ORDER } from "../../lib/calc";
 import { CUENTAS_CORRIENTES } from "../../lib/cuentas";
@@ -347,7 +347,7 @@ export default function EstructuraTab({
         </div>
       </div>
 
-      <div className="rounded-xl p-5 mt-4 flex items-center justify-between flex-wrap gap-3" style={{ background: COLORS.navy }}>
+      <div className="rounded-xl p-5 mt-4 flex items-center justify-between flex-wrap gap-3" style={{ background: GRADIENTS.navy, boxShadow: "0 6px 16px rgba(1,79,134,0.18)" }}>
         <div>
           <div className="text-xs font-medium" style={{ color: "rgba(255,255,255,0.7)" }}>Subtotal traspasos registrados (REX)</div>
           <div className="text-2xl font-bold mt-1" style={{ color: "#fff", fontFamily: "var(--font-mono)" }}>{fmtCLP(estructuraCalc.sacadosSum)}</div>

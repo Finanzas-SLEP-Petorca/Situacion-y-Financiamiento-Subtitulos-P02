@@ -2,6 +2,7 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, ReferenceLine,
 } from "recharts";
+import { Landmark, Users, TrendingUp, TrendingDown } from "lucide-react";
 import { COLORS } from "../../lib/colors";
 import { fmtCLP, fmtNum } from "../../lib/format";
 import { MONTHS, MONTHS_SHORT, FUENTE_DEFS } from "../../lib/calc";
@@ -97,10 +98,10 @@ export default function ResumenTab({ months, monthTotals, accumulated, corte, se
       </div>
 
       <div className="grid gap-3 mb-5" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
-        <KpiCard label={`Ingresos totales (Ene–${MONTHS_SHORT[corte - 1]})`} value={fmtCLP(totalIngresos)} tone="navy" />
-        <KpiCard label="Remuneraciones brutas" value={fmtCLP(totalRemu)} tone="neutral" />
-        <KpiCard label="Déficit / Superávit del período" value={fmtCLP(totalDeficit)} tone={totalDeficit >= 0 ? "success" : "danger"} />
-        <KpiCard label="Acumulado a corte" value={fmtCLP(acumuladoFinal)} tone={acumuladoFinal >= 0 ? "success" : "danger"} sub={`${mesesDeficit} de ${corte} meses en déficit`} />
+        <KpiCard label={`Ingresos totales (Ene–${MONTHS_SHORT[corte - 1]})`} value={fmtCLP(totalIngresos)} tone="navy" icon={Landmark} />
+        <KpiCard label="Remuneraciones brutas" value={fmtCLP(totalRemu)} tone="neutral" icon={Users} />
+        <KpiCard label="Déficit / Superávit del período" value={fmtCLP(totalDeficit)} tone={totalDeficit >= 0 ? "success" : "danger"} icon={totalDeficit >= 0 ? TrendingUp : TrendingDown} />
+        <KpiCard label="Acumulado a corte" value={fmtCLP(acumuladoFinal)} tone={acumuladoFinal >= 0 ? "success" : "danger"} sub={`${mesesDeficit} de ${corte} meses en déficit`} icon={acumuladoFinal >= 0 ? TrendingUp : TrendingDown} />
       </div>
 
       <div className="card mb-5">
