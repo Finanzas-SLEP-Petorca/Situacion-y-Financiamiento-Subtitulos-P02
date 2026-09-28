@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
-import { LayoutGrid, FileSpreadsheet, ArrowLeftRight, ClipboardList, Loader2, BookOpen } from "lucide-react";
-import { COLORS } from "./lib/colors";
+import { LayoutGrid, FileSpreadsheet, ArrowLeftRight, ClipboardList, Loader2, BookOpen, LogOut } from "lucide-react";
+import { COLORS, GRADIENTS } from "./lib/colors";
 import { computeDetalleSum, fmtChileStamp, buildFileName } from "./lib/format";
 import { MONTHS, FIELD_LABELS } from "./lib/calc";
 import { displayName } from "./lib/teamNames";
@@ -109,6 +109,7 @@ export default function App() {
   const pendingChanges = changeLog.filter((c) => c.incluido && !c.reportado);
   const lastLog = changeLog[0];
   const lastEdit = lastLog ? { name: displayName(lastLog.userEmail), stamp: fmtChileStamp(lastLog.ts) } : null;
+  const userInitial = (displayName(user?.email) || user?.email || "?").trim().charAt(0).toUpperCase();
 
   function openDatosReport() {
     const r = buildDatosMensualReport({ monthIdx: selectedMonth, monthData: months[selectedMonth], monthTotal: monthTotals[selectedMonth], accumulated });
@@ -168,28 +169,38 @@ export default function App() {
             <SyncStatus status={data.saveStatus} lastEdit={lastEdit} userEmail={user?.email} />
             <button
               onClick={() => setShowGuide(true)}
-              className="flex items-center gap-1.5 text-xs font-medium"
-              style={{ color: "rgba(255,255,255,0.75)" }}
+              className="flex items-center gap-1.5 text-xs font-semibold rounded-full px-3 py-1.5 transition-colors"
+              style={{ background: "rgba(255,255,255,0.14)", color: "#fff", border: "1px solid rgba(255,255,255,0.3)" }}
               title="Cómo usar este dashboard"
             >
               <BookOpen size={14} /> Cómo usar
             </button>
             <button
               onClick={logout}
-              className="text-xs font-medium"
-              style={{ color: "rgba(255,255,255,0.75)" }}
+              className="flex items-center gap-1.5 text-xs font-medium rounded-full px-3 py-1.5 transition-colors"
+              style={{ color: "rgba(255,255,255,0.8)" }}
               title="Cerrar sesión"
             >
-              Cerrar sesión
+              <LogOut size={14} /> Cerrar sesión
             </button>
+            <div
+              className="flex items-center justify-center rounded-full shrink-0 font-semibold"
+              style={{ width: 34, height: 34, background: GRADIENTS.warning, color: "#fff", fontSize: 14, boxShadow: "0 2px 6px rgba(0,0,0,0.2)" }}
+              title={user?.email || ""}
+            >
+              {userInitial}
+            </div>
             <div style={{ background: "#fff", borderRadius: 8, padding: "5px 12px", display: "flex", alignItems: "center", boxShadow: "0 1px 3px rgba(0,0,0,0.15)" }}>
               <img src={LOGO_SRC} alt="SLEP Petorca" style={{ height: 24, width: "auto", display: "block" }} />
             </div>
           </div>
         </header>
 
-        <div className="flex items-center gap-3 px-5 py-2.5 border-b flex-wrap" style={{ background: "#fff", borderColor: COLORS.line }}>
-          <nav className="flex items-center gap-1 flex-wrap">
+        <div className="flex items-center gap-3 px-5 py-3 border-b flex-wrap" style={{ background: "#fff", borderColor: COLORS.line }}>
+          <nav
+            className="flex items-center gap-1 flex-wrap rounded-full p-1"
+            style={{ background: COLORS.mist }}
+          >
             {TABS.map((t) => {
               const Icon = t.icon;
               const active = activeTab === t.key;
@@ -197,10 +208,11 @@ export default function App() {
                 <button
                   key={t.key}
                   onClick={() => setActiveTab(t.key)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-medium transition-colors"
                   style={{
-                    background: active ? COLORS.navy : "transparent",
+                    background: active ? GRADIENTS.navy : "transparent",
                     color: active ? "#fff" : COLORS.inkSoft,
+                    boxShadow: active ? "0 3px 8px rgba(1,79,134,0.3)" : "none",
                   }}
                 >
                   <Icon size={15} />

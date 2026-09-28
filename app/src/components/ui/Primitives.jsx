@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { TrendingUp, TrendingDown, Save, Loader2, Download, Printer, Mail, List } from "lucide-react";
-import { COLORS } from "../../lib/colors";
+import { COLORS, GRADIENTS } from "../../lib/colors";
 import { fmtNum, fmtCLP } from "../../lib/format";
 
 export function Badge({ tone = "neutral", children, style }) {
@@ -200,19 +200,36 @@ export function SyncStatus({ status, lastEdit, userEmail }) {
   );
 }
 
-export function KpiCard({ label, value, tone, sub }) {
-  const tones = {
-    navy: { bg: COLORS.navy, fg: "#fff" },
-    success: { bg: COLORS.successBg, fg: COLORS.success },
-    danger: { bg: COLORS.dangerBg, fg: COLORS.danger },
-    neutral: { bg: "#fff", fg: COLORS.ink },
+export function KpiCard({ label, value, tone, sub, icon: Icon, trend }) {
+  const gradients = {
+    navy: GRADIENTS.navy,
+    success: GRADIENTS.success,
+    danger: GRADIENTS.danger,
+    neutral: GRADIENTS.steel,
   };
-  const t = tones[tone] || tones.neutral;
+  const bg = gradients[tone] || gradients.neutral;
   return (
-    <div className="rounded-xl p-4 border" style={{ background: t.bg, borderColor: tone === "navy" ? COLORS.navy : COLORS.line }}>
-      <div className="text-xs font-medium" style={{ color: tone === "navy" ? "rgba(255,255,255,0.75)" : COLORS.inkSoft }}>{label}</div>
-      <div className="text-xl font-bold mt-1" style={{ color: t.fg, fontFamily: "var(--font-mono)" }}>{value}</div>
-      {sub && <div className="text-[11px] mt-0.5" style={{ color: tone === "navy" ? "rgba(255,255,255,0.65)" : COLORS.inkSoft }}>{sub}</div>}
+    <div className="rounded-2xl p-4 relative overflow-hidden" style={{ background: bg, boxShadow: "0 6px 16px rgba(1,79,134,0.18)" }}>
+      {Icon && (
+        <div
+          className="flex items-center justify-center rounded-full absolute"
+          style={{ width: 30, height: 30, top: 12, right: 12, background: "rgba(255,255,255,0.22)" }}
+        >
+          <Icon size={15} color="#fff" />
+        </div>
+      )}
+      <div className="text-xs font-medium pr-8" style={{ color: "rgba(255,255,255,0.8)" }}>{label}</div>
+      <div className="text-2xl font-bold mt-1" style={{ color: "#fff", fontFamily: "var(--font-mono)" }}>{value}</div>
+      {sub && <div className="text-[11px] mt-0.5" style={{ color: "rgba(255,255,255,0.7)" }}>{sub}</div>}
+      {trend != null && (
+        <div
+          className="inline-flex items-center gap-1 rounded-full text-[10px] font-semibold mt-2 px-2 py-0.5"
+          style={{ background: "rgba(255,255,255,0.2)", color: "#fff" }}
+        >
+          {trend >= 0 ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
+          {Math.abs(trend).toLocaleString("es-CL", { maximumFractionDigits: 1 })}% vs. mes anterior
+        </div>
+      )}
     </div>
   );
 }
