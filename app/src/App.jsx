@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { LayoutGrid, FileSpreadsheet, ArrowLeftRight, ClipboardList, Loader2 } from "lucide-react";
+import { LayoutGrid, FileSpreadsheet, ArrowLeftRight, ClipboardList, Loader2, BookOpen } from "lucide-react";
 import { COLORS } from "./lib/colors";
 import { computeDetalleSum, fmtChileStamp, buildFileName } from "./lib/format";
 import { MONTHS, FIELD_LABELS } from "./lib/calc";
@@ -13,6 +13,7 @@ import EstructuraTab from "./components/tabs/EstructuraTab";
 import BitacoraTab from "./components/tabs/BitacoraTab";
 import DetalleModal from "./components/DetalleModal";
 import ReportModal from "./components/ReportModal";
+import HelpGuideModal from "./components/HelpGuideModal";
 import { PrintViewDatos, PrintViewResumen, PrintViewEstructura, PrintViewBitacora, PrintViewRex } from "./components/print/PrintViews";
 import {
   buildDatosMensualReport, buildResumenReport, buildEstructuraReport, buildBitacoraReport,
@@ -56,6 +57,7 @@ export default function App() {
   const [detalleModal, setDetalleModal] = useState(null);
   const [detalleEstructuraModal, setDetalleEstructuraModal] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
 
   const openDetalle = useCallback((monthIdx, fuenteKey, field, label) => {
     setDetalleModal({ monthIdx, fuenteKey, field, label });
@@ -164,6 +166,14 @@ export default function App() {
           </div>
           <div className="flex items-center gap-3 shrink-0">
             <SyncStatus status={data.saveStatus} lastEdit={lastEdit} userEmail={user?.email} />
+            <button
+              onClick={() => setShowGuide(true)}
+              className="flex items-center gap-1.5 text-xs font-medium"
+              style={{ color: "rgba(255,255,255,0.75)" }}
+              title="Cómo usar este dashboard"
+            >
+              <BookOpen size={14} /> Cómo usar
+            </button>
             <button
               onClick={logout}
               className="text-xs font-medium"
@@ -323,6 +333,8 @@ export default function App() {
           />
         );
       })()}
+
+      {showGuide && <HelpGuideModal onClose={() => setShowGuide(false)} />}
     </div>
   );
 }
